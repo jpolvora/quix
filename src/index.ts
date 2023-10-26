@@ -9,6 +9,7 @@ async function start() {
 
   const options = new Command()
     .option('-m, --micro-service <TYPE>', 'microservice to run')
+    .option('-p, --port [VALUE]', 'http port', process.env.PORT || "3000")
     .option('-e, --env [VALUE]', 'environment', process.env.NODE_ENV || "develop")
     .parse(process.argv)
     .opts();
@@ -29,7 +30,7 @@ async function start() {
 
   if (microServicesToStart.length === 0) throw new Error("no microservice to execute")
 
-  const port = Number(process.env.PORT);
+  const port = Number(options.port || process.env.PORT);
 
   if (!port) throw new Error("Invalid port")
 
