@@ -7,10 +7,15 @@ export default class ListAccountsFromDb implements ListAccounts {
     }
 
     async execute(page: number, pageSize: number): Promise<ListAccountOutput> {
-        const data = await this.repository.getAccounts(page, pageSize);
+        const multplier = page <= 0 ? 1 : page + 1;
+        const skip = pageSize * multplier;
+        const data = await this.repository.getAccounts(skip, pageSize);
+        
         return await Promise.resolve({
             success: true,
-            data: data
+            data: data,
+            page,
+            pageSize
         })
     }
 }

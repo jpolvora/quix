@@ -5,7 +5,12 @@ export type Result = {
     error?: string
 }
 
-export type ListAccountOutput = Result & {
+export type Paging = {
+    page: number;
+    pageSize: number
+}
+
+export type ListAccountOutput = Result & Paging & {
     data?: BankAccount[]
 }
 
