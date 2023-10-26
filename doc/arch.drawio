@@ -1,0 +1,28 @@
+<mxfile host="65bd71144e">
+    <diagram id="pk_a8L8x4fv5XoUZSkfn" name="Page-1">
+        <mxGraphModel dx="786" dy="222" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="API&lt;br&gt;Accounts" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" parent="1" vertex="1">
+                    <mxGeometry x="70.00076923076924" y="270" width="129.23076923076923" height="129.23076923076923" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Accounts-DB" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+                    <mxGeometry x="93.07769230769232" y="440" width="83.07692307692308" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="API&lt;br&gt;Transactions" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="1">
+                    <mxGeometry x="457.693076923077" y="270" width="129.23076923076923" height="129.23076923076923" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="Transactions-DB" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+                    <mxGeometry x="494.6161538461539" y="440" width="83.07692307692308" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="Redis Cache" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                    <mxGeometry x="270.00307692307695" y="304.62" width="110.76923076923077" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+                    <mxGeometry x="277.69153846153847" y="440" width="110.76923076923077" height="80" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
