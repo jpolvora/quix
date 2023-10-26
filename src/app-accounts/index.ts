@@ -8,7 +8,7 @@ export function initAccountMicroservice(): Promise<Express> {
 
     app.use(express.json())
 
-    //setup routes   
+    //setup routes
 
     app.get("/list", async (req, res) => {
         const page = req.query["page"] || 1;

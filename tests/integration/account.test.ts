@@ -25,7 +25,7 @@ describe("Account Integration Tests", () => {
             pageSize: 20
         });
 
-        console.log(res.body)
+        //console.log(res.body)
 
         //assert
         expect(res.statusCode).toBe(200);        
