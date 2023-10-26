@@ -22,7 +22,7 @@ export default class BankAccount {
     this._balance = rounded;
   }
 
-  getBalance(): number {
+  public get Balance(): number {
     return this._balance
   }
 
