@@ -1,12 +1,27 @@
 import express, { Express } from 'express'
+import ListAccountsFromDb from './data/ListAccountsFromRepository';
+import { ListAccounts } from './use-cases/list-accounts';
+import AccountsRepository from './data/AccountsRepository';
 
 export function initAccountMicroservice(): Promise<Express> {
     const app = express()
 
-    //setup routes
+    app.use(express.json())
+
+    //setup routes   
+
+    app.get("/list", async (req, res) => {
+        const page = req.query["page"] || 1;
+        const pageSize = req.query["pageSize"] || 20;
+
+        const useCase: ListAccounts = new ListAccountsFromDb(new AccountsRepository());
+        const result = await useCase.execute(Number(page), Number(pageSize));
+
+        return res.json(result);
+    })
 
     app.get("*", (req, res) => {
-        console.log('%s request', req.method)
+        //console.log('%s request', req.method)
         return res.send("Account Microservice: request received").end();
     })
 

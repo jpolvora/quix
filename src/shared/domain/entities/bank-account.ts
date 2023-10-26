@@ -1,8 +1,14 @@
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from "crypto";
 
 type BankAccountType = 'Corrente' | 'Poupança'
 
 export default class BankAccount {
+
+
+  /** 
+   * regras: conta poupança não aceita PIX  
+   */
+
 
   private _balance: number = 0;
 
@@ -21,7 +27,7 @@ export default class BankAccount {
   }
 
   public static Generate(): string {
-    return uuidv4();
+    return randomUUID();
   }
 
   public static CreateNewAccount() {
