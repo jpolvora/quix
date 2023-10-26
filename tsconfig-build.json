@@ -3,6 +3,7 @@
     "exclude": [
         "tests",
         "doc",
-        "dist"
+        "dist",
+        "coverage"
     ]
 }
