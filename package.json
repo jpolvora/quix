@@ -3,7 +3,7 @@
   "version": "0.0.7",
   "description": "quick pix simulator",
   "engines": {
-    "node": "18"
+    "node": "20"
   },
   "repository": "https://github.com/jpolvora/quix",
   "main": "dist/index.js",
@@ -12,8 +12,8 @@
     "dev:proxy": "nodemon ./src/app-proxy/index.ts --watch .env --watch ./src/app-proxy",
     "dev:account": "nodemon ./src/index.ts --watch .env --watch ./src -- -m app-account -p 3001",
     "dev:transactions": "nodemon ./src/index.ts --watch .env --watch ./src -- -m app-transactions -p 3002",
-    "start:account": "node ./dist/index.js -m app-account",
-    "start:transactions": "node ./dist/index.js -m app-transactions",
+    "start:account": "node ./dist/index.js -m app-account -p 3001",
+    "start:transactions": "node ./dist/index.js -m app-transactions -p 3002",
     "start:proxy": "node ./dist/app-proxy/index.js",
     "start": "pm2-runtime start ecosystem.config.js",
     "build": "rimraf dist && tsc -p tsconfig-build.json",

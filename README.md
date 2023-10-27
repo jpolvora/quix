@@ -7,7 +7,7 @@ Implementation of a 'Pix' bank & account services
 
 - Clonar o projeto `git clone https://github.com/jpolvora/quix`
 -   `npm install` para instalar as dependências
--   Configurar as variáveis de ambiente (seguir o `.env.example`)
+-   Configurar as variáveis de ambiente => `cp .env.example .env`
 -   `npm run db:create` para configurar o banco de dados
 -   `npm run build` para transpilar para `./dist`
 -   `npm run start:proxy` para executar o api-gateway
