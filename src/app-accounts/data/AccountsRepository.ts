@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client/edge'
 import BankAccount, { BankAccountType } from "../../shared/domain/entities/bank-account";
-import { randomUUID } from "crypto";
 
 export default class AccountsRepository {
 
@@ -8,13 +7,12 @@ export default class AccountsRepository {
 
     async getAccounts(skip: number, take: number): Promise<BankAccount[]> {
         const result: BankAccount[] = [];
-        console.log({ skip, take })
         const data = await this.prisma.accounts.findMany({
             skip,
             take
         })
 
-        console.log(data)
+        //console.log(data)
 
         data.map(item => {
             const account = new BankAccount(item.id, item.account_type as BankAccountType);
