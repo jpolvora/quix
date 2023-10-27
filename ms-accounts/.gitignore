@@ -1,0 +1,8 @@
+node_modules/
+.tmp/
+dist/
+.env
+.vscode/
+!**/.vscode/extensions.json
+coverage/
+docs/

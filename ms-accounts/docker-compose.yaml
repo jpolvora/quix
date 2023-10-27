@@ -1,0 +1,73 @@
+version: "3"
+
+services:
+  app_accounts:
+    image: "node:20-alpine"
+    container_name: app_accounts_container
+    user: "node"
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+    command: ["npm", "run", "start"]
+    environment:
+      - PORT=3001
+      - RABBITMQ_HOST=rabbitmq
+      - DATABASE_URL=postgresql://postgres:pgsql@postgres:5432/quix-accounts?schema=public
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - pgadmin
+
+  postgres:
+    image: postgres
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "pgsql"
+      PGDATA: /data/postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.tmp/postgres_data:/data/postgres
+    # profiles:
+    #   - donotstart
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: email@postgres.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    # profiles:
+    #   - donotstart
+
+  # rabbitmq:
+  #   image: "rabbitmq:3.8-management-alpine"
+  #   container_name: rabbitmq_container
+  #   hostname: rabbitmq
+  #   ports:
+  #     - "15672:15672"
+  #     - "5672:5672"
+  #   volumes:
+  #     - "./.tmp/rabbitmq_data:/var/lib/rabbitmq/mnesia"
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=admin
+  #     - RABBITMQ_DEFAULT_PASS=admin
+  #   profiles:
+  #     - donotstart
+
+  # redis:
+  #   image: redis:6.2-alpine
+  #   container_name: redis_container
+  #   restart: always
+  #   ports:
+  #     - "6379:6379"
+  #   command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+  #   volumes:
+  #     - ./.tmp/redis_data:/data
+  #   profiles:
+  #     - donotstart
