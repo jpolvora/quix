@@ -12,6 +12,7 @@ model accounts {
   id           String    @id @db.Uuid
   account_type String    @db.VarChar(20)
   enabled      Boolean   @default(false)
+  balance      Decimal   @db.Money @default(0)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
