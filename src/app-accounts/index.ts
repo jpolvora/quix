@@ -1,28 +1,77 @@
-import express, { Express } from 'express'
-import ListAccountsFromDb from './data/ListAccountsFromRepository';
-import { ListAccounts } from './use-cases/list-accounts';
-import AccountsRepository from './data/AccountsRepository';
-import prisma from './data/prisma-client'
+import express, { Express, json } from 'express'
+import DbListAccounts from './data/DbListAccounts';
+import { IListAccounts, ListAccountOutput } from './use-cases/IListAccounts';
+import AccountsRepository from './data/DbAccountsRepository';
+import prisma from './infra/prisma-client'
+import { AccountOutput, ICreateAccount } from './use-cases/ICreateAccount';
+import DbCreateAccount from './data/DbCreateAccount';
+import { ValidationError } from './validation/ValidationError';
+import { createInputFromRequest } from '../shared/utils/app';
 
-export function initAccountMicroservice(): Promise<Express> {
+export async function initAccountMicroservice(): Promise<Express> {
+
+    //ensure services connected before proceed ()
+
+    try {
+        await prisma.$connect()
+        //await amqp-connect
+        //await redis-connect
+
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+
     const app = express()
 
-    app.use(express.json())
+    //setup middlewares
+
+    app.use(json())
+    app.use((_, res, next) => {
+        res.set('access-control-allow-origin', '*')
+        res.set('access-control-allow-headers', '*')
+        res.set('access-control-allow-methods', '*')
+        res.type('json')
+        return next()
+    })
 
     //setup routes
 
-    app.get("/list", async (req, res) => {
-        const page = req.query["page"] || 1;
-        const pageSize = req.query["pageSize"] || 20;
-        const useCase: ListAccounts = new ListAccountsFromDb(new AccountsRepository(prisma));
-        const result = await useCase.execute(Number(page), Number(pageSize));
-
-        return res.json(result);
+    app.get("/", async (req, res) => {
+        return res.json({
+            message: "Welcome to accounts microservice"
+        })
     })
 
-    app.get("*", (req, res) => {
-        //console.log('%s request', req.method)
-        return res.send("Account Microservice: request received").end();
+    app.get("/list", async (req, res, next) => {
+        const page = req.query["page"] || 1;
+        const pageSize = req.query["pageSize"] || 20;
+        const useCase: IListAccounts = new DbListAccounts(new AccountsRepository(prisma));
+        const result: ListAccountOutput = await useCase.execute(Number(page), Number(pageSize));
+
+        if (result.success) return res.json(result);
+
+        return next(result.error)
+
+    })
+
+    app.post("/create", async (req, res, next) => {
+        const request = createInputFromRequest<any>(req)
+
+        //todo: better validation layer
+
+        const useCase: ICreateAccount = new DbCreateAccount(new AccountsRepository(prisma))
+
+        const result: AccountOutput = await useCase.execute(request.id, request.accountType);
+
+        if (result.success) return res.status(201).json(result);
+
+        if (result.error instanceof ValidationError) return res.status(400).json({
+            succces: false,
+            error: result.error.name
+        })
+
+        return next(result.error)
     })
 
     return Promise.resolve(app);

@@ -1,4 +1,4 @@
-import { Express } from 'express'
+import { Express, Request } from 'express'
 import { Server } from 'http';
 
 export function startApp(app: Express, port: number): Promise<Server> {
@@ -7,4 +7,13 @@ export function startApp(app: Express, port: number): Promise<Server> {
         let server: Server;
         server = app.listen(port, () => resolve(server))
     })
+}
+
+export function createInputFromRequest<T>(req: Request) {
+    const request = {
+        ...(req.body || {}),
+        ...(req.params || {})
+    }
+
+    return request as T;
 }

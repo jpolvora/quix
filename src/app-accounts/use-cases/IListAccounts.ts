@@ -1,20 +1,12 @@
 import BankAccount from "@/shared/domain/entities/bank-account"
-
-export type Result = {
-    success: boolean;
-    error?: string
-}
-
-export type Paging = {
-    page: number;
-    pageSize: number
-}
+import { Paging, Result } from "./types"
+import { AccountDTO } from "../data/AccountDTO"
 
 export type ListAccountOutput = Result & Paging & {
-    data?: BankAccount[]
+    data?: AccountDTO[]
 }
 
-export interface ListAccounts {
+export interface IListAccounts {
 
     /**
     * list-all-accounts
@@ -23,5 +15,6 @@ export interface ListAccounts {
     * @param pageSize the page size
     * @returns the list of accounts according to page & pageSize parameters
     */
-    execute(page: number, pageSize: number): Promise<ListAccountOutput>
+    execute: (page: number, pageSize: number) => Promise<ListAccountOutput>
 }
+

@@ -1,8 +1,8 @@
 import { calcSkip } from "../../shared/utils/fns";
-import { ListAccountOutput, ListAccounts } from "../use-cases/list-accounts";
-import AccountsRepository from "./AccountsRepository";
+import { IListAccounts, ListAccountOutput } from "../use-cases";
+import AccountsRepository from "./DbAccountsRepository";
 
-export default class ListAccountsFromDb implements ListAccounts {
+export default class DbListAccounts implements IListAccounts {
 
     constructor(private readonly repository: AccountsRepository) { }
 
