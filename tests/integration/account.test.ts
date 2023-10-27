@@ -31,6 +31,6 @@ describe("Account Integration Tests", () => {
         expect(res.statusCode).toBe(200);        
         expect(res.body.success).toBeTruthy();
         expect(res.body.error).toBeFalsy();
-        expect(res.body.data).toHaveLength(1);
+        expect(res.body.data).toHaveLength(2);
     });
 });

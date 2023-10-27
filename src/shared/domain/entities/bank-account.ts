@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 
-type BankAccountType = 'Corrente' | 'Poupança'
+export type BankAccountType = 'Corrente' | 'Poupança'
 
 export default class BankAccount {
 
