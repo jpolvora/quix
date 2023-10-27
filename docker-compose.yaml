@@ -2,7 +2,7 @@ version: "3"
 
 services:
   app_proxy:
-    image: "node:18-alpine"
+    image: "node:20-alpine"
     container_name: app_proxy_container
     user: "node"
     working_dir: /home/node/app
@@ -20,7 +20,7 @@ services:
       - app_transactions
 
   app_accounts:
-    image: "node:18-alpine"
+    image: "node:20-alpine"
     container_name: app_accounts_container
     user: "node"
     working_dir: /home/node/app
@@ -34,7 +34,7 @@ services:
       - "3001:3001"
 
   app_transactions:
-    image: "node:18-alpine"
+    image: "node:20-alpine"
     container_name: app_transactions_container
     user: "node"
     working_dir: /home/node/app
