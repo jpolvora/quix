@@ -1,7 +1,7 @@
 import { agent as request } from "supertest";
-import { setupApp } from "@/app";
+import { setupApp } from "@/application/app";
 import { randomUUID } from "crypto";
-import prisma from "@/infra/prisma-client";
+import { prisma } from "@/infra/prisma-client";
 import { ValidationError } from "@/validation/ValidationError";
 
 const poupancaEnabled = {

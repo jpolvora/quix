@@ -1,19 +1,16 @@
 import express, { Express, json } from 'express'
-import DbListAccounts from '@/data/DbListAccounts';
 import { IListAccounts, ListAccountOutput } from '@/use-cases/IListAccounts';
-import AccountsRepository from '@/data/DbAccountsRepository';
-import prisma from '@/infra/prisma-client'
 import { AccountOutput, ICreateAccount } from '@/use-cases/ICreateAccount';
-import DbCreateAccount from '@/data/DbCreateAccount';
 import { ValidationError } from '@/validation/ValidationError';
 import { createInputFromRequest } from '@/shared/utils/app';
+import { makeCreateAccountUseCase, makeListAccountsUseCase } from './container';
+//import { TYPES, appContainer } from "./container";
 
 export async function setupApp(): Promise<Express> {
-
     //ensure services connected before proceed ()
 
     try {
-        await prisma.$connect()
+        //await prisma.$connect()
         //await amqp-connect
         //await redis-connect
 
@@ -37,7 +34,7 @@ export async function setupApp(): Promise<Express> {
 
     //setup routes
 
-    app.get("/", async (req, res) => {
+    app.get("/", async (_, res) => {
         return res.json({
             message: "Welcome to accounts microservice"
         })
@@ -46,7 +43,7 @@ export async function setupApp(): Promise<Express> {
     app.get("/list", async (req, res, next) => {
         const page = req.query["page"] || 1;
         const pageSize = req.query["pageSize"] || 20;
-        const useCase: IListAccounts = new DbListAccounts(new AccountsRepository(prisma));
+        const useCase: IListAccounts = makeListAccountsUseCase();
         const result: ListAccountOutput = await useCase.execute(Number(page), Number(pageSize));
 
         if (result.success) return res.json(result);
@@ -60,8 +57,7 @@ export async function setupApp(): Promise<Express> {
 
         //todo: better validation layer
 
-        const useCase: ICreateAccount = new DbCreateAccount(new AccountsRepository(prisma))
-
+        const useCase: ICreateAccount = makeCreateAccountUseCase();
         const result: AccountOutput = await useCase.execute(request.id, request.accountType);
 
         if (result.success) return res.status(201).json(result);

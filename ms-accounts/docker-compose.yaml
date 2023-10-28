@@ -21,7 +21,7 @@ services:
 
   postgres:
     image: postgres
-    container_name: postgres_container
+    container_name: postgres_account-container
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "pgsql"

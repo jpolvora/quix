@@ -1,5 +1,17 @@
 import { PrismaClient } from "@prisma/client"
 
-const prisma = new PrismaClient();
+const prisma: PrismaClient = new PrismaClient(); //singleton
 
-export default prisma;
+export interface IPrismaClientWrapper {
+    getClient(): PrismaClient
+}
+
+class PrismaClientWrapper implements IPrismaClientWrapper {
+
+    getClient() {
+        return prisma;
+    }
+
+}
+
+export { prisma };

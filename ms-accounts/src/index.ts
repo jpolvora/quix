@@ -1,14 +1,10 @@
-import { config } from 'dotenv'
-import 'module-alias/register'
+import "dotenv/config"
+import "./register"
 import { Command } from 'commander';
 import { startApp } from '@/shared/utils/app';
-import { setupApp } from '@/app';
+import { setupApp } from '@/application/app';
 
 async function start() {
-
-    const env = config();
-    console.log(env)
-
     const options = new Command()
         .option('-p, --port [VALUE]', 'http port', process.env.PORT || "3000")
         .option('-e, --env [VALUE]', 'environment', process.env.NODE_ENV || "develop")
@@ -26,6 +22,5 @@ async function start() {
 
     console.log("ms-account started at port %s", port)
 }
-
 
 start().catch(console.error.bind(console))

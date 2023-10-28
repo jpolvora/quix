@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client';
-import { AccountDTO } from './AccountDTO';
 import { randomUUID } from 'crypto';
+import { AccountDTO } from './AccountDTO';
+import { PrismaClient } from '@prisma/client';
 
 export default class AccountsRepository {
 
