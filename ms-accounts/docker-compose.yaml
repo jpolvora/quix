@@ -12,14 +12,14 @@ services:
     environment:
       - PORT=3001
       - RABBITMQ_HOST=rabbitmq
-      - DATABASE_URL=postgresql://postgres:pgsql@postgres:5432/quix-accounts?schema=public
+      - DATABASE_URL=postgresql://postgres:pgsql@postgres_account:5432/quix-accounts?schema=public
     ports:
       - "3001:3001"
     depends_on:
       - postgres
       - pgadmin
 
-  postgres:
+  postgres_account:
     image: postgres
     container_name: postgres_account-container
     environment:
