@@ -10,11 +10,11 @@ export default class DbListAccounts implements IListAccounts {
     const skip = calcSkip(page, pageSize)
     const data = await this.repository.getAccounts(skip, pageSize)
 
-    return await Promise.resolve({
+    return {
       success: true,
       data: data,
       page,
       pageSize,
-    })
+    }
   }
 }
