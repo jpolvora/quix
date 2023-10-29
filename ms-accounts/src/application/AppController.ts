@@ -1,4 +1,4 @@
-import { Express, NextFunction, Request, Response } from 'express'
+import { Express } from 'express'
 import { makeCreateAccountUseCase, makeGetAccountUseCase, makeListAccountsUseCase } from './container'
 import { CreateAccountHandler, GetAccountHandler, ListAccountsHandler } from './actions'
 

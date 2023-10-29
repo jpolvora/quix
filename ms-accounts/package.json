@@ -8,8 +8,8 @@
   "repository": "https://github.com/jpolvora/quix",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=develop APP_PATH=src nodemon ./src/index.ts  --watch .env --watch ./src",
-    "debug": "cross-env NODE_ENV=develop APP_PATH=src nodemon ./src/index.ts  --watch .env --watch ./src",
+    "dev": "cross-env NODE_ENV=develop nodemon ./src/index.ts  --watch .env --watch ./src",
+    "debug": "cross-env NODE_ENV=develop nodemon ./src/index.ts  --watch .env --watch ./src",
     "start": "cross-env NODE_ENV=production node ./dist/index.js -p 3001 -e production",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "clean": "rimraf dist",

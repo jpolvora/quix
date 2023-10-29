@@ -24,7 +24,14 @@ export default abstract class ActionHandler<TInput, TOutput extends Result, UseC
       const useCase = this.useCaseFactory()
       const input = this.getInput(req)
       const output = await useCase.execute(input)
-      output?.success ? res.status(this.getSuccessStatusCode()).json(output) : this.handleError(output.error, res, next)
+
+      if (output.success) {
+        //log
+        res.status(this.getSuccessStatusCode()).json(output)
+      } else {
+        //log
+        this.handleError(output.error, res, next)
+      }
     } catch (error) {
       this.handleError(error, res, next)
     }
