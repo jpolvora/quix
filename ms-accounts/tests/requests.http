@@ -6,6 +6,12 @@ content-type: application/json
     "accountType": "Corrente"
 }
 
+
+###
+GET http://localhost:3001/list HTTP/1.1
+content-type: application/json
+
+
 ###
 GET http://localhost:3001/get/111994c7-81ea-4614-ad1f-9bb927751e10 HTTP/1.1
 content-type: application/json

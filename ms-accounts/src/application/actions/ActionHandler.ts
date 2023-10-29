@@ -1,34 +1,32 @@
+import { createInputFromRequest } from '@/shared/utils/app'
 import { IUseCase, Result } from '@/use-cases'
 import { DbError, HttpNotFoundError, MissingParamError, ValidationError } from '@/validation/errors'
 import { NextFunction, Request, Response } from 'express'
 
-type ExpressMiddleware = {
-  req: Request
-  res: Response
-  next: NextFunction
-}
+export default abstract class ActionHandler<TInput, TOutput extends Result, UseCase extends IUseCase<TInput, TOutput>> {
+  constructor(private readonly useCaseFactory: () => UseCase) {}
 
-export default class ActionHandler<TInput, TOutput extends Result, UseCase extends IUseCase<TInput, TOutput>> {
-  private readonly req: Request
-  private readonly res: Response<any, Record<string, any>>
-  private readonly next: NextFunction
-
-  constructor(
-    private readonly useCaseFactory: () => UseCase,
-    middleware: ExpressMiddleware,
-  ) {
-    this.req = middleware.req
-    this.res = middleware.res
-    this.next = middleware.next
+  protected getInput(req: Request): TInput {
+    const input: TInput = createInputFromRequest<TInput>(req)
+    return input
   }
 
-  async handle(input: TInput, statusCode: number = 200): Promise<any> {
+  protected getSuccessStatusCode(): number {
+    return 200
+  }
+
+  public getHandler() {
+    return this.handle.bind(this)
+  }
+
+  public async handle(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const useCase = this.useCaseFactory()
+      const input = this.getInput(req)
       const output = await useCase.execute(input)
-      output?.success ? this.res.status(statusCode).json(output) : this.handleError(output.error, this.res, this.next)
+      output?.success ? res.status(this.getSuccessStatusCode()).json(output) : this.handleError(output.error, res, next)
     } catch (error) {
-      this.handleError(error, this.res, this.next)
+      this.handleError(error, res, next)
     }
   }
 
