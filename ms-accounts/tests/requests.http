@@ -2,6 +2,16 @@ POST http://localhost:3001/create HTTP/1.1
 content-type: application/json
 
 {
-    "id": "111994c7-81e7-4614-ad1f-9bb927751e13",
+    "id": "111994c7-81e7-4614-ad1f-9bb927751e14",
     "accountType": "Corrente"
 }
+
+###
+
+GET http://localhost:3001/get/111994c7-81e7-4614-ad1f-9bb927751e10 HTTP/1.1
+content-type: application/json
+
+###
+
+GET http://localhost:3001/get/910481f2-66cc-4bed-a366-cd21f69bd61b HTTP/1.1
+content-type: application/json

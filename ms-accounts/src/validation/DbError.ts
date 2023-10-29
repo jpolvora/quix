@@ -1,6 +1,6 @@
 export class DbError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'DbError';
-    }
+  constructor(message: string) {
+    super(message)
+    this.name = 'DbError'
+  }
 }

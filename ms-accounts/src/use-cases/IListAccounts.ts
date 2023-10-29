@@ -1,6 +1,3 @@
-import { IUseCase, ListAccountsInput, ListAccountsOutput } from "./types";
+import { IUseCase, ListAccountsInput, ListAccountsOutput } from './types'
 
-export interface IListAccounts extends IUseCase<ListAccountsInput, ListAccountsOutput> {
-
-}
-
+export interface IListAccounts extends IUseCase<ListAccountsInput, ListAccountsOutput> {}

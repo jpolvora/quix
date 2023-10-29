@@ -11,6 +11,8 @@ import DbListAccounts from '@/data/DbListAccounts'
 import { IListAccounts } from '@/use-cases'
 import { ICreateAccount } from '@/use-cases/ICreateAccount'
 import { prisma } from '@/infra/prisma-client'
+import { IGetAccount } from '@/use-cases/IGetAccount'
+import DbGetAccount from '@/data/DbGetAccount'
 
 // const TYPES = {
 //     ListAccounts: Symbol.for("ListAccounts"),
@@ -29,6 +31,10 @@ import { prisma } from '@/infra/prisma-client'
 
 export type ServiceRegistration = {
   [key: string]: Function
+}
+
+export function makeGetAccountUseCase(): IGetAccount {
+  return new DbGetAccount(new AccountsRepository(prisma))
 }
 
 export function makeListAccountsUseCase(): IListAccounts {

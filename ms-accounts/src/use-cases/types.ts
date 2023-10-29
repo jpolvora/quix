@@ -23,6 +23,12 @@ export type CreateAccountInput = {
 
 export type CreateAccountOuput = Result & Paging
 
+export type GetAccountInput = string
+
+export type GetAccountOutput = Result & {
+  data?: AccountDTO
+}
+
 export type ListAccountsOutput = Result &
   Paging & {
     data?: AccountDTO[]
