@@ -14,7 +14,8 @@ services:
       - RABBITMQ_HOST=rabbitmq
       - DATABASE_URL=postgresql://postgres:pgsql@postgres_account:5432/quix-accounts?schema=public
     ports:
-      - "3001:3001"
+      - 3001:3001
+      - 9229:9229
     depends_on:
       - postgres
       - pgadmin

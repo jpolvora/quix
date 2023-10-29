@@ -5,12 +5,12 @@
 // import AccountsRepository from "@/data/DbAccountsRepository";
 // import { IPrismaClientWrapper, PrismaClientWrapper } from '@/infra/prisma-client'
 
-import AccountsRepository from "@/data/DbAccountsRepository";
-import DbCreateAccount from "@/data/DbCreateAccount";
-import DbListAccounts from "@/data/DbListAccounts";
-import { IListAccounts } from "@/use-cases";
-import { ICreateAccount } from "@/use-cases/ICreateAccount";
-import { prisma } from "@/infra/prisma-client";
+import AccountsRepository from '@/data/DbAccountsRepository'
+import DbCreateAccount from '@/data/DbCreateAccount'
+import DbListAccounts from '@/data/DbListAccounts'
+import { IListAccounts } from '@/use-cases'
+import { ICreateAccount } from '@/use-cases/ICreateAccount'
+import { prisma } from '@/infra/prisma-client'
 
 // const TYPES = {
 //     ListAccounts: Symbol.for("ListAccounts"),
@@ -27,10 +27,14 @@ import { prisma } from "@/infra/prisma-client";
 
 // //export { TYPES, appContainer }
 
+export type ServiceRegistration = {
+  [key: string]: Function
+}
+
 export function makeListAccountsUseCase(): IListAccounts {
-    return new DbListAccounts(new AccountsRepository(prisma));
+  return new DbListAccounts(new AccountsRepository(prisma))
 }
 
 export function makeCreateAccountUseCase(): ICreateAccount {
-    return new DbCreateAccount(new AccountsRepository(prisma));
+  return new DbCreateAccount(new AccountsRepository(prisma))
 }

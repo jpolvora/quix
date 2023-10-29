@@ -8,7 +8,8 @@
   "repository": "https://github.com/jpolvora/quix",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon ./src/index.ts --watch .env --watch ./src",
+    "dev": "nodemon ./src/index.ts  --watch .env --watch ./src",
+    "debug": "nodemon ./src/index.ts  --watch .env --watch ./src",
     "start": "node ./dist/index.js -p 3001 -e production",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "clean": "rimraf dist",
@@ -42,6 +43,7 @@
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",
     "pm2": "^5.3.0",
+    "prettier": "^3.0.3",
     "prisma": "^5.5.2",
     "rimraf": "^3.0.2",
     "supertest": "^6.3.3",
