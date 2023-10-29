@@ -3,9 +3,10 @@ import { Express, NextFunction, Request, Response } from 'express'
 import { makeCreateAccountUseCase, makeGetAccountUseCase, makeListAccountsUseCase } from './container'
 import { createInputFromRequest } from '@/shared/utils/app'
 import { ICreateAccount } from '@/use-cases/ICreateAccount'
-import { ValidationError } from '@/validation/ValidationError'
+import { ValidationError } from '@/validation/errors/ValidationError'
 import { IGetAccount } from '@/use-cases/IGetAccount'
-import { HttpNotFoundError } from '@/validation/HttpNotFoundError'
+import { HttpNotFoundError } from '@/validation/errors/HttpNotFoundError'
+import { MissingParamError } from '@/validation/errors'
 
 export class AppController {
   constructor(private readonly app: Express) {}
@@ -54,7 +55,7 @@ export class AppController {
 
     if (result.success) return res.status(201).json(result)
 
-    if (result.error instanceof ValidationError)
+    if (result.error instanceof ValidationError || result.error instanceof MissingParamError)
       return res.status(400).json({
         succces: false,
         error: result.error.name,

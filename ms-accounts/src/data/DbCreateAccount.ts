@@ -1,32 +1,34 @@
 import { ICreateAccount } from '@/use-cases/ICreateAccount'
-import { DbError } from '@/validation/DbError'
-import { CreateAccountValidator } from '@/validation/CreateAccountValidator'
+import { DbError } from '@/validation/errors/DbError'
+import { CreateAccountValidator } from '@/validation/validators/CreateAccountValidator'
 import AccountsRepository from './DbAccountsRepository'
 import { CreateAccountInput, CreateAccountOuput } from '@/use-cases'
-import { ValidationError } from '@/validation/ValidationError'
+import { ValidationError } from '@/validation/errors/ValidationError'
 
 export default class DbCreateAccount implements ICreateAccount {
   constructor(private readonly repository: AccountsRepository) {}
 
   async execute(input: CreateAccountInput): Promise<CreateAccountOuput> {
-    const { id, accountType } = input
+    const validationResult = new CreateAccountValidator().validate(input)
 
-    const validator = new CreateAccountValidator()
-    const hasValidationError = validator.validate({
-      id,
-      accountType,
-    })
-
-    if (hasValidationError)
+    if (!validationResult.isValid) {
       return {
         success: false,
-        error: hasValidationError,
+        error: validationResult.error,
       }
+    }
+
+    const { id, accountType } = input
 
     try {
       //check existing account
       const account = await this.repository.getAccount(id)
-      if (account) throw new DbError('Existing account')
+      if (account) {
+        return {
+          success: false,
+          error: new ValidationError('Existing account'),
+        }
+      }
 
       const data = await this.repository.createAccount({
         id,
@@ -40,7 +42,7 @@ export default class DbCreateAccount implements ICreateAccount {
     } catch (error) {
       return {
         success: false,
-        error: new ValidationError(error),
+        error: new DbError(error),
       }
     }
   }

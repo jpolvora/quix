@@ -1,7 +1,7 @@
 import { AccountDTO } from '@/data/AccountDTO'
-import { HttpNotFoundError } from '@/validation/HttpNotFoundError'
-import { MissingParamError } from '@/validation/MissingParamError'
-import { ValidationError } from '@/validation/ValidationError'
+import { HttpNotFoundError } from '@/validation/errors/HttpNotFoundError'
+import { MissingParamError } from '@/validation/errors/MissingParamError'
+import { ValidationError } from '@/validation/errors/ValidationError'
 
 export interface IUseCase<TInput, TOuput> {
   execute(input: TInput): Promise<TOuput>

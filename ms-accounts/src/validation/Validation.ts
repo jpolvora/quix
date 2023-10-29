@@ -1,8 +1,5 @@
-import { MissingParamError } from "./MissingParamError";
-import { ValidationError } from "./ValidationError";
+import { ValidationResult } from './ValidationResult'
 
-export interface Validation<T> {
-    validate: (input: T) => ValidationError | MissingParamError | null;
+export default interface Validation<T> {
+  validate: (input: T) => ValidationResult
 }
-
-

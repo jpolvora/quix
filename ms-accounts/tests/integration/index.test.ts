@@ -2,8 +2,9 @@ import { agent as request } from 'supertest'
 import { setupApp } from '@/application/app'
 import { randomUUID } from 'crypto'
 import { prisma } from '@/infra/prisma-client'
-import { ValidationError } from '@/validation/ValidationError'
-import { DbError } from '@/validation/DbError'
+import { ValidationError } from '@/validation/errors/ValidationError'
+import { DbError } from '@/validation/errors/DbError'
+import { MissingParamError } from '@/validation/errors'
 
 const poupancaEnabled = {
   id: '111994c7-81e7-4614-ad1f-9bb927751e13',
@@ -168,7 +169,7 @@ describe('Account Integration Tests', () => {
     //assert
     expect(res.statusCode).toBe(400)
     expect(res.body.success).toBeFalsy()
-    expect(res.body.error).toBe(ValidationError.name)
+    expect(res.body.error).toBe(MissingParamError.name)
   })
 
   it('should NOT create account when POST /create with existing id', async () => {

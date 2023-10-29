@@ -1,8 +1,7 @@
 import express, { Express, Request, Response, json } from 'express'
 import { AppController } from './AppController'
 import { NextFunction } from 'connect'
-import { ValidationError } from '@/validation/ValidationError'
-import { DbError } from '@/validation/DbError'
+import { DbError, ValidationError } from '@/validation/errors'
 
 export async function setupApp(): Promise<Express> {
   //ensure services connected before proceed ()
