@@ -1,37 +1,12 @@
+import { prisma } from '@/infra/prisma-client'
+import { poupancaEnabled, poupancaDisabled, correnteEnabled, correnteDisabled, accountToCreateAndVerify } from './data'
 import { agent as request } from 'supertest'
 import { setupApp } from '@/application/app'
+import { HttpNotFoundError, MissingParamError, ValidationError } from '@/validation/errors'
 import { randomUUID } from 'crypto'
-import { prisma } from '@/infra/prisma-client'
-import { ValidationError } from '@/validation/errors/ValidationError'
-import { DbError } from '@/validation/errors/DbError'
-import { HttpNotFoundError, MissingParamError } from '@/validation/errors'
-
-const poupancaEnabled = {
-  id: '111994c7-81e7-4614-ad1f-9bb927751e13',
-  account_type: 'Poupança',
-  enabled: true,
-}
-
-const poupancaDisabled = {
-  id: '52bca67c-e99e-495f-b372-2bcf8e1db815',
-  account_type: 'Poupança',
-  enabled: false,
-}
-
-const correnteEnabled = {
-  id: '910481f2-66cc-4bed-a366-cd21f69bd61b',
-  account_type: 'Corrente',
-  enabled: true,
-}
-
-const correnteDisabled = {
-  id: '0cd5a079-7c34-4b0f-8027-fcbc89d9e9c8',
-  account_type: 'Corrente',
-  enabled: false,
-}
+import { AccountTypes } from '@/domain/use-cases'
 
 beforeAll(async () => {
-  // create product categories
   await prisma.$connect()
 
   await prisma.accounts.deleteMany()
@@ -41,7 +16,7 @@ beforeAll(async () => {
   })
 })
 
-describe('Account Integration Tests', () => {
+describe('Default Handler', () => {
   it('should respond with status 200 when GET /', async () => {
     //arrange
     const sut = await setupApp()
@@ -52,13 +27,15 @@ describe('Account Integration Tests', () => {
     //assert
     expect(response.statusCode).toBe(200)
   })
+})
 
+describe('Get Account Tests', () => {
   it('should respond with status 200 when GET /get/:id with existing account', async () => {
     //arrange
     const sut = await setupApp()
 
     //act
-    const res = await request(sut).get('/get/111994c7-81e7-4614-ad1f-9bb927751e13')
+    const res = await request(sut).get(`/get/${correnteEnabled.id}`)
 
     //assert
     expect(res.statusCode).toBe(200)
@@ -72,14 +49,16 @@ describe('Account Integration Tests', () => {
     const sut = await setupApp()
 
     //act
-    const res = await request(sut).get('/get/111994c7-81e7-4614-ad1f-9bb927751e14')
+    const res = await request(sut).get(`/get/${randomUUID()}`)
 
     //assert
     expect(res.statusCode).toBe(404)
     expect(res.body.success).toBeFalsy()
     expect(res.body.error).toBeTruthy()
   })
+})
 
+describe('List Tests', () => {
   it('should respond with status 200 when GET /list with default parameters', async () => {
     //arrange
     const sut = await setupApp()
@@ -134,13 +113,15 @@ describe('Account Integration Tests', () => {
     expect(res.body.error).toBeFalsy()
     expect(res.body.data).toHaveLength(2)
   })
+})
 
+describe('CRUD tests', () => {
   it('should create account when POST /create', async () => {
     //arrange
     const sut = await setupApp()
     const payload = {
-      id: randomUUID(),
-      accountType: 'Poupança',
+      id: accountToCreateAndVerify.id,
+      accountType: accountToCreateAndVerify.account_type,
     }
     //act
     const res = await request(sut)
@@ -176,7 +157,7 @@ describe('Account Integration Tests', () => {
     //arrange
     const sut = await setupApp()
     const payload = {
-      id: '910481f2-66cc-4bed-a366-cd21f69bd61b',
+      id: poupancaDisabled.id,
       accountType: 'Poupança',
     }
 
@@ -194,14 +175,16 @@ describe('Account Integration Tests', () => {
     expect(res.body.success).toBeFalsy()
     expect(res.body.error).toBe(ValidationError.name)
   })
+})
 
+describe('Business Tests', () => {
   it('should change existing account type', async () => {
     //arrange
     const sut = await setupApp()
 
     const payload = {
-      accountId: '52bca67c-e99e-495f-b372-2bcf8e1db815',
-      newAccountType: 'Corrente',
+      accountId: correnteDisabled.id,
+      newAccountType: AccountTypes.Poupança,
     }
     //act
     const res = await request(sut)
@@ -213,9 +196,7 @@ describe('Account Integration Tests', () => {
     //console.log(res.body)
 
     //assert
-    expect(res.statusCode).toBe(200)
-    expect(res.body.success).toBeTruthy()
-    expect(res.body.error).toBeFalsy()
+    expect(res.statusCode).toBe(204)
   })
 
   it('should NOT change non existent account type', async () => {
@@ -223,8 +204,8 @@ describe('Account Integration Tests', () => {
     const sut = await setupApp()
 
     const payload = {
-      accountId: '52bca67c-e99e-495f-b372-2bcf8e1db810',
-      newAccountType: 'Corrente',
+      accountId: randomUUID(),
+      newAccountType: AccountTypes.Corrente,
     }
     //act
     const res = await request(sut)
@@ -241,12 +222,12 @@ describe('Account Integration Tests', () => {
     expect(res.body.error).toBe(HttpNotFoundError.name)
   })
 
-  it('should NOT change invalid account type', async () => {
+  it('should NOT change account when invalid account type', async () => {
     //arrange
     const sut = await setupApp()
 
     const payload = {
-      accountId: '52bca67c-e99e-495f-b372-2bcf8e1db815',
+      accountId: correnteEnabled.id,
       newAccountType: 'TIPO_INVALIDO',
     }
     //act
@@ -262,5 +243,20 @@ describe('Account Integration Tests', () => {
     expect(res.statusCode).toBe(400)
     expect(res.body.success).toBeFalsy()
     expect(res.body.error).toBe(ValidationError.name)
+  })
+
+  it('should disable specific account', async () => {
+    //arrange
+    const sut = await setupApp()
+    //act
+    const res = await request(sut)
+      .patch(`/disable-account/${poupancaEnabled.id}`)
+      .set('Content-type', 'application/json')
+      .set('Authorization', 'password')
+
+    //console.log(res.body)
+
+    //assert
+    expect(res.statusCode).toBe(204)
   })
 })

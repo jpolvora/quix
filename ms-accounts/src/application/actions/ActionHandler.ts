@@ -40,6 +40,8 @@ export default abstract class ActionHandler<TInput, TOutput extends Result, UseC
   private handleError(error: Error, res: Response, next: NextFunction) {
     if (!error) return next(new Error('unknow error'))
 
+    console.log(error)
+
     const extraInfo = {
       handled: true,
       env: process.env.NODE_ENV,

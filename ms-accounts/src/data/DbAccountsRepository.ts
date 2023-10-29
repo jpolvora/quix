@@ -23,6 +23,10 @@ export default class AccountsRepository {
     return data
   }
 
+  async getTotalAccounts(filter: string = '') {
+    return await this.prisma.accounts.count()
+  }
+
   async createAccount(input: AccountDTO): Promise<AccountDTO> {
     return await this.prisma.accounts.create({
       data: {

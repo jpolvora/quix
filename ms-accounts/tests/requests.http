@@ -36,3 +36,27 @@ content-type: application/json
     "accountId": "0cd5a079-7c34-4b0f-8027-fcbc89d9e9c8",
     "newAccountType": "Corrente"
 }
+
+###
+PATCH  http://localhost:3001/change-account-type HTTP/1.1
+content-type: application/json
+
+{
+    "accountId": "0cd5a079-7c34-4b0f-8027-fcbc89d9e9c8",
+    "newAccountType": "Poupança"
+}
+
+###
+
+PATCH  http://localhost:3001/disable-account/111994c7-81e7-4614-ad1f-9bb927751e13 HTTP/1.1
+content-type: application/json
+
+###
+
+PATCH  http://localhost:3001/enable-account/111994c7-81e7-4614-ad1f-9bb927751e13 HTTP/1.1
+content-type: application/json
+
+###
+
+GET  http://localhost:3001/get/111994c7-81e7-4614-ad1f-9bb927751e13 HTTP/1.1
+content-type: application/json

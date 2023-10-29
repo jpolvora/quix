@@ -1,4 +1,4 @@
-import { CreateAccountInput } from '@/domain/use-cases'
+import { AccountTypes, CreateAccountInput } from '@/domain/use-cases'
 import { ValidationResult } from '../ValidationResult'
 import { ValidationBase } from '../ValidationBase'
 
@@ -11,9 +11,9 @@ export class CreateAccountValidator implements ValidationBase<CreateAccountInput
 
     if (!input.accountType) return ValidationBase.CreateValidationError('account type')
 
-    if (!['Corrente', 'Poupança'].includes(input.accountType))
+    if (![AccountTypes.Corrente, AccountTypes.Poupança].includes(input.accountType)) {
       return ValidationBase.CreateValidationError('account type should be Corrente or Poupança')
-
+    }
     return ValidationBase.Success()
   }
 }

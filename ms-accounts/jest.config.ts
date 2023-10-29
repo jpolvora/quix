@@ -1,7 +1,6 @@
-import type { Config } from '@jest/types';
+import type { Config } from '@jest/types'
 
-
-process.env['DATABASE_URL'] = "postgresql://postgres:pgsql@localhost:5432/quix-accounts?schema=public";
+process.env['DATABASE_URL'] = 'postgresql://postgres:pgsql@localhost:5432/quix-accounts?schema=public'
 
 // Sync object
 const config: Config.InitialOptions = {
@@ -11,8 +10,8 @@ const config: Config.InitialOptions = {
   },
   moduleNameMapper: {
     '@/tests/(.*)': '<rootDir>/tests/$1',
-    '@/(.*)': '<rootDir>/src/$1'
-  }
-  // setupFilesAfterEnv: ['./tests/bootstrap.ts']
-};
-export default config;
+    '@/(.*)': '<rootDir>/src/$1',
+  },
+  setupFilesAfterEnv: ['<rootDir>/tests/integration/boot.ts'],
+}
+export default config

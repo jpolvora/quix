@@ -12,6 +12,11 @@ export type Result = {
   error?: ValidationError | MissingParamError | HttpNotFoundError
 }
 
+export type PagedResult = Result &
+  Paging & {
+    total: number
+  }
+
 export type Paging = {
   page: number
   pageSize: number
@@ -32,10 +37,9 @@ export type GetAccountOutput = Result & {
   data?: AccountDTO
 }
 
-export type ListAccountsOutput = Result &
-  Paging & {
-    data?: AccountDTO[]
-  }
+export type ListAccountsOutput = PagedResult & {
+  data?: AccountDTO[]
+}
 
 export type ListAccountsInput = Paging
 
@@ -45,3 +49,16 @@ export type ChangeAccountTypeInput = {
 }
 
 export type ChangeAccountTypeOutput = Result
+
+export type DisableAccountInput = string
+
+export type DisableAccountOutput = Result
+
+export type EnableAccountInput = string
+
+export type EnableAccountOutput = Result
+
+export const AccountTypes = {
+  Poupança: 'Poupança',
+  Corrente: 'Corrente',
+}

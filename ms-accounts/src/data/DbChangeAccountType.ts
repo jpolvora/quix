@@ -3,7 +3,7 @@ import AccountsRepository from './DbAccountsRepository'
 import { DbError, HttpNotFoundError } from '@/validation/errors'
 import { ChangeAccountTypeValidator } from '@/validation/validators/ChangeAccountTypeValidator'
 
-export default class DbChangeAccountType implements IChangeAccountType {
+export class DbChangeAccountType implements IChangeAccountType {
   constructor(private readonly repository: AccountsRepository) {}
 
   async execute(input: ChangeAccountTypeInput): Promise<Result> {

@@ -8,9 +8,11 @@ export default class DbListAccounts implements IListAccounts {
   async execute(input: ListAccountsInput): Promise<ListAccountsOutput> {
     const { page, pageSize } = input
     const skip = calcSkip(page, pageSize)
+    const total = await this.repository.getTotalAccounts()
     const data = await this.repository.getAccounts(skip, pageSize)
 
     return {
+      total,
       success: true,
       data,
       page,
