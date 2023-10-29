@@ -15,3 +15,11 @@ content-type: application/json
 
 GET http://localhost:3001/get/910481f2-66cc-4bed-a366-cd21f69bd61b HTTP/1.1
 content-type: application/json
+
+###
+GET http://localhost:3001/throw400 HTTP/1.1
+content-type: application/json
+
+###
+GET http://localhost:3001/throw500 HTTP/1.1
+content-type: application/json
