@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto'
 import { prisma } from '@/infra/prisma-client'
 import { ValidationError } from '@/validation/errors/ValidationError'
 import { DbError } from '@/validation/errors/DbError'
-import { MissingParamError } from '@/validation/errors'
+import { HttpNotFoundError, MissingParamError } from '@/validation/errors'
 
 const poupancaEnabled = {
   id: '111994c7-81e7-4614-ad1f-9bb927751e13',
@@ -195,22 +195,72 @@ describe('Account Integration Tests', () => {
     expect(res.body.error).toBe(ValidationError.name)
   })
 
-  // it('should set create account when POST /create with missing parameters', async () => {
-  //   //arrange
-  //   const sut = await setupApp()
-  //   const payload = {}
-  //   //act
-  //   const res = await request(sut)
-  //     .post('/create')
-  //     .set('Content-type', 'application/json')
-  //     .set('Authorization', 'password')
-  //     .send(payload)
+  it('should change existing account type', async () => {
+    //arrange
+    const sut = await setupApp()
 
-  //   //console.log(res.body)
+    const payload = {
+      accountId: '52bca67c-e99e-495f-b372-2bcf8e1db815',
+      newAccountType: 'Corrente',
+    }
+    //act
+    const res = await request(sut)
+      .patch('/change-account-type')
+      .set('Content-type', 'application/json')
+      .set('Authorization', 'password')
+      .send(payload)
 
-  //   //assert
-  //   expect(res.statusCode).toBe(400)
-  //   expect(res.body.success).toBeFalsy()
-  //   expect(res.body.error).toBe(ValidationError.name)
-  // })
+    //console.log(res.body)
+
+    //assert
+    expect(res.statusCode).toBe(200)
+    expect(res.body.success).toBeTruthy()
+    expect(res.body.error).toBeFalsy()
+  })
+
+  it('should NOT change non existent account type', async () => {
+    //arrange
+    const sut = await setupApp()
+
+    const payload = {
+      accountId: '52bca67c-e99e-495f-b372-2bcf8e1db810',
+      newAccountType: 'Corrente',
+    }
+    //act
+    const res = await request(sut)
+      .patch('/change-account-type')
+      .set('Content-type', 'application/json')
+      .set('Authorization', 'password')
+      .send(payload)
+
+    //console.log(res.body)
+
+    //assert
+    expect(res.statusCode).toBe(404)
+    expect(res.body.success).toBeFalsy()
+    expect(res.body.error).toBe(HttpNotFoundError.name)
+  })
+
+  it('should NOT change invalid account type', async () => {
+    //arrange
+    const sut = await setupApp()
+
+    const payload = {
+      accountId: '52bca67c-e99e-495f-b372-2bcf8e1db815',
+      newAccountType: 'TIPO_INVALIDO',
+    }
+    //act
+    const res = await request(sut)
+      .patch('/change-account-type')
+      .set('Content-type', 'application/json')
+      .set('Authorization', 'password')
+      .send(payload)
+
+    //console.log(res.body)
+
+    //assert
+    expect(res.statusCode).toBe(400)
+    expect(res.body.success).toBeFalsy()
+    expect(res.body.error).toBe(ValidationError.name)
+  })
 })

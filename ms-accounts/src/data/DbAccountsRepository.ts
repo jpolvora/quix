@@ -30,4 +30,13 @@ export default class AccountsRepository {
       },
     })
   }
+
+  async save(input: AccountDTO): Promise<AccountDTO> {
+    return await this.prisma.accounts.update({
+      data: input,
+      where: {
+        id: input.id,
+      },
+    })
+  }
 }

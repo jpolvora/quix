@@ -38,3 +38,10 @@ export type ListAccountsOutput = Result &
   }
 
 export type ListAccountsInput = Paging
+
+export type ChangeAccountTypeInput = {
+  accountId: string
+  newAccountType: string
+}
+
+export type ChangeAccountTypeOutput = Result

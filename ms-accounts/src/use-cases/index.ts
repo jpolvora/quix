@@ -1,2 +1,5 @@
-export * from "./types"
-export * from "./IListAccounts"
+export * from './types'
+export * from './IListAccounts'
+export * from './ICreateAccount'
+export * from './IChangeAccountType'
+export * from './IGetAccount'
