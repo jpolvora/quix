@@ -5,14 +5,14 @@ import AccountsRepository from './DbAccountsRepository'
 export default class DbListAccounts implements IListAccounts {
   constructor(private readonly repository: AccountsRepository) {}
 
-  async run(input: ListAccountsInput): Promise<ListAccountsOutput> {
+  async execute(input: ListAccountsInput): Promise<ListAccountsOutput> {
     const { page, pageSize } = input
     const skip = calcSkip(page, pageSize)
     const data = await this.repository.getAccounts(skip, pageSize)
 
     return {
       success: true,
-      data: data,
+      data,
       page,
       pageSize,
     }

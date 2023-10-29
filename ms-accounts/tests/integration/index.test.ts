@@ -3,6 +3,7 @@ import { setupApp } from '@/application/app'
 import { randomUUID } from 'crypto'
 import { prisma } from '@/infra/prisma-client'
 import { ValidationError } from '@/validation/ValidationError'
+import { DbError } from '@/validation/DbError'
 
 const poupancaEnabled = {
   id: '111994c7-81e7-4614-ad1f-9bb927751e13',
@@ -151,7 +152,7 @@ describe('Account Integration Tests', () => {
     expect(res.statusCode).toBe(201)
   })
 
-  it('should not create account when POST /create with missing parameters', async () => {
+  it('should NOT create account when POST /create with missing parameters', async () => {
     //arrange
     const sut = await setupApp()
     const payload = {}
@@ -170,10 +171,14 @@ describe('Account Integration Tests', () => {
     expect(res.body.error).toBe(ValidationError.name)
   })
 
-  it('should set create account when POST /create with missing parameters', async () => {
+  it('should NOT create account when POST /create with existing id', async () => {
     //arrange
     const sut = await setupApp()
-    const payload = {}
+    const payload = {
+      id: '910481f2-66cc-4bed-a366-cd21f69bd61b',
+      accountType: 'Poupança',
+    }
+
     //act
     const res = await request(sut)
       .post('/create')
@@ -188,4 +193,23 @@ describe('Account Integration Tests', () => {
     expect(res.body.success).toBeFalsy()
     expect(res.body.error).toBe(ValidationError.name)
   })
+
+  // it('should set create account when POST /create with missing parameters', async () => {
+  //   //arrange
+  //   const sut = await setupApp()
+  //   const payload = {}
+  //   //act
+  //   const res = await request(sut)
+  //     .post('/create')
+  //     .set('Content-type', 'application/json')
+  //     .set('Authorization', 'password')
+  //     .send(payload)
+
+  //   //console.log(res.body)
+
+  //   //assert
+  //   expect(res.statusCode).toBe(400)
+  //   expect(res.body.success).toBeFalsy()
+  //   expect(res.body.error).toBe(ValidationError.name)
+  // })
 })

@@ -1,5 +1,6 @@
-import express, { Express, json } from 'express'
+import express, { Express, Request, Response, json } from 'express'
 import { AppController } from './AppController'
+import { NextFunction } from 'connect'
 
 export async function setupApp(): Promise<Express> {
   //ensure services connected before proceed ()
@@ -35,7 +36,17 @@ export async function setupApp(): Promise<Express> {
     })
   })
 
-  new AppController(app).configureRoutes()
+  await new AppController(app).configureRoutes()
 
-  return Promise.resolve(app)
+  app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+    console.error(err.stack)
+
+    return res.status(500).json({
+      success: false,
+      statusCode: 500,
+      error: err,
+      errorDetails: err.message,
+    })
+  })
+  return app
 }

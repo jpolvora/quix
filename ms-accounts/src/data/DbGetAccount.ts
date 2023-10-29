@@ -7,7 +7,7 @@ import { HttpNotFoundError } from '@/validation/HttpNotFoundError'
 export default class DbGetAccount implements IGetAccount {
   constructor(private readonly repository: AccountsRepository) {}
 
-  async run(id: GetAccountInput): Promise<GetAccountOutput> {
+  async execute(id: GetAccountInput): Promise<GetAccountOutput> {
     try {
       const account = await this.repository.getAccount(id)
       if (!account)

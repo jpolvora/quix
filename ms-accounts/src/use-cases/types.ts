@@ -1,14 +1,15 @@
 import { AccountDTO } from '@/data/AccountDTO'
+import { HttpNotFoundError } from '@/validation/HttpNotFoundError'
 import { MissingParamError } from '@/validation/MissingParamError'
 import { ValidationError } from '@/validation/ValidationError'
 
 export interface IUseCase<TInput, TOuput> {
-  run(input: TInput): Promise<TOuput>
+  execute(input: TInput): Promise<TOuput>
 }
 
 export type Result = {
   success: boolean
-  error?: ValidationError | MissingParamError | Error | string
+  error?: ValidationError | MissingParamError | HttpNotFoundError
 }
 
 export type Paging = {
@@ -21,7 +22,9 @@ export type CreateAccountInput = {
   accountType: string
 }
 
-export type CreateAccountOuput = Result & Paging
+export type CreateAccountOuput = Result & {
+  data?: AccountDTO
+}
 
 export type GetAccountInput = string
 
