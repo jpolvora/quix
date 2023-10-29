@@ -4,17 +4,19 @@ import {
   GetAccountInput,
   GetAccountOutput,
   IListAccounts,
+  ListAccountsInput,
   ListAccountsOutput,
-  Paging,
 } from '@/use-cases'
 import { Express, NextFunction, Request, Response } from 'express'
 import { makeCreateAccountUseCase, makeGetAccountUseCase, makeListAccountsUseCase } from './container'
 import { createInputFromRequest } from '@/shared/utils/app'
 import { ICreateAccount } from '@/use-cases/ICreateAccount'
-import { ValidationError } from '@/validation/errors/ValidationError'
 import { IGetAccount } from '@/use-cases/IGetAccount'
-import { HttpNotFoundError } from '@/validation/errors/HttpNotFoundError'
-import { DbError, MissingParamError } from '@/validation/errors'
+import ActionHandler from './actions/ActionHandler'
+
+interface TypedRequestBody<T> extends Express.Request {
+  body: T
+}
 
 export class AppController {
   constructor(private readonly app: Express) {}
@@ -27,71 +29,43 @@ export class AppController {
     return Promise.resolve()
   }
 
-  private handleError(error: Error, res: Response, next: NextFunction) {
-    if (!error) return next(new Error('unknow error'))
-
-    if (error instanceof HttpNotFoundError) {
-      return res.status(404).json({
-        succces: false,
-        error: error.name,
-      })
-    }
-
-    if (error instanceof DbError) {
-      return res.status(500).json({
-        succces: false,
-        error: error.name,
-      })
-    }
-
-    if (error instanceof ValidationError || error instanceof MissingParamError) {
-      return res.status(400).json({
-        succces: false,
-        error: error.name,
-      })
-    }
-
-    return next(error)
-  }
-
   private async list(req: Request, res: Response, next: NextFunction) {
     const page = req.query['page'] || 1
     const pageSize = req.query['pageSize'] || 20
 
-    const useCase: IListAccounts = makeListAccountsUseCase()
-
-    const input: Paging = {
+    const handler = new ActionHandler<ListAccountsInput, ListAccountsOutput, IListAccounts>(makeListAccountsUseCase, {
+      req,
+      res,
+      next,
+    })
+    await handler.handle({
       page: Number(page),
       pageSize: Number(pageSize),
-    }
-
-    const output: ListAccountsOutput = await useCase.execute(input)
-    if (output.success) return res.json(output)
-
-    return this.handleError(output.error, res, next)
+    })
   }
 
   private async get(req: Request, res: Response, next: NextFunction) {
     const input: GetAccountInput = req.params['id']
-    const useCase: IGetAccount = makeGetAccountUseCase()
-    const output: GetAccountOutput = await useCase.execute(input)
 
-    if (output.success) return res.json(output)
-
-    return this.handleError(output.error, res, next)
+    const handler = new ActionHandler<GetAccountInput, GetAccountOutput, IGetAccount>(makeGetAccountUseCase, {
+      req,
+      res,
+      next,
+    })
+    await handler.handle(input)
   }
 
   private async create(req: Request, res: Response, next: NextFunction) {
-    const request: any = createInputFromRequest(req)
-    const useCase: ICreateAccount = makeCreateAccountUseCase()
-    const input: CreateAccountInput = {
-      id: request.id,
-      accountType: request.accountType,
-    }
-    const output: CreateAccountOuput = await useCase.execute(input)
+    const input: CreateAccountInput = createInputFromRequest(req)
 
-    if (output.success) return res.status(201).json(output)
-
-    return output.error ? this.handleError(output.error, res, next) : next(new Error('unhandled error'))
+    const handler = new ActionHandler<CreateAccountInput, CreateAccountOuput, ICreateAccount>(
+      makeCreateAccountUseCase,
+      {
+        req,
+        res,
+        next,
+      },
+    )
+    await handler.handle(input, 201)
   }
 }

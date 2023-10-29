@@ -10,7 +10,7 @@ export default class DbGetAccount implements IGetAccount {
   async execute(id: GetAccountInput): Promise<GetAccountOutput> {
     try {
       const account = await this.repository.getAccount(id)
-      console.log(account)
+
       if (!account)
         return {
           success: false,

@@ -3,7 +3,7 @@ import { HttpNotFoundError } from '@/validation/errors/HttpNotFoundError'
 import { MissingParamError } from '@/validation/errors/MissingParamError'
 import { ValidationError } from '@/validation/errors/ValidationError'
 
-export interface IUseCase<TInput, TOuput> {
+export interface IUseCase<TInput, TOuput extends Result> {
   execute(input: TInput): Promise<TOuput>
 }
 
