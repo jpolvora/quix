@@ -10,7 +10,7 @@ export class AppController {
 
   public configureRoutes() {
     this.app.get('/list', this.list)
-    this.app.post('/', this.create)
+    this.app.post('/create', this.create)
   }
 
   private async list(req: Request, res: Response, next: NextFunction) {
