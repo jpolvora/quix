@@ -13,7 +13,14 @@ import { ICreateAccount } from '@/domain/use-cases/ICreateAccount'
 import { prisma } from '@/infra/prisma-client'
 import { IGetAccount } from '@/domain/use-cases/IGetAccount'
 import DbGetAccount from '@/data/DbGetAccount'
-import { DisableAccountHandler, EnableAccountHandler, ListAccountsHandler } from './actions'
+import {
+  ChangeAccountTypeHandler,
+  CreateAccountHandler,
+  DisableAccountHandler,
+  EnableAccountHandler,
+  GetAccountHandler,
+  ListAccountsHandler,
+} from './actions'
 import { DbChangeAccountType } from '@/data'
 import { IDisableAccount } from '@/domain/use-cases/IDisableAccount'
 import { DbDisableAccount } from '@/data/DbDisableAccount'
@@ -66,14 +73,14 @@ export function makeEnableAccountUseCase(): IDisableAccount {
 
 // HANDLERS
 
-export function makeListAccountHandler() {
-  return new ListAccountsHandler(makeListAccountsUseCase).getHandler()
-}
+export const makeListAccountHandler = () => new ListAccountsHandler(makeListAccountsUseCase).getHandler()
 
-export function makeDisableAccountHandler() {
-  return new DisableAccountHandler(makeDisableAccountUseCase).getHandler()
-}
+export const makeGetAccountHandler = () => new GetAccountHandler(makeGetAccountUseCase).getHandler()
 
-export function makeEnableAccountHandler() {
-  return new EnableAccountHandler(makeEnableAccountUseCase).getHandler()
-}
+export const makeCreateAccountHandler = () => new CreateAccountHandler(makeCreateAccountUseCase).getHandler()
+
+export const makeChangeAccountHandler = () => new ChangeAccountTypeHandler(makeChangeAccountTypeUseCase).getHandler()
+
+export const makeDisableAccountHandler = () => new DisableAccountHandler(makeDisableAccountUseCase).getHandler()
+
+export const makeEnableAccountHandler = () => new EnableAccountHandler(makeEnableAccountUseCase).getHandler()

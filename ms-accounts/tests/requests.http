@@ -43,7 +43,7 @@ content-type: application/json
 
 {
     "accountId": "0cd5a079-7c34-4b0f-8027-fcbc89d9e9c8",
-    "newAccountType": "Poupança"
+    "newAccountType": "Corrente"
 }
 
 ###
