@@ -1,6 +1,6 @@
-import { CreateAccountInput, CreateAccountOuput } from '@/use-cases'
+import { CreateAccountInput, CreateAccountOuput } from '@/domain/use-cases'
 import ActionHandler from './ActionHandler'
-import { ICreateAccount } from '@/use-cases/ICreateAccount'
+import { ICreateAccount } from '@/domain/use-cases/ICreateAccount'
 
 export class CreateAccountHandler extends ActionHandler<CreateAccountInput, CreateAccountOuput, ICreateAccount> {
   protected getSuccessStatusCode(): number {

@@ -8,10 +8,10 @@
 import AccountsRepository from '@/data/DbAccountsRepository'
 import DbCreateAccount from '@/data/DbCreateAccount'
 import DbListAccounts from '@/data/DbListAccounts'
-import { IChangeAccountType, IListAccounts } from '@/use-cases'
-import { ICreateAccount } from '@/use-cases/ICreateAccount'
+import { IChangeAccountType, IListAccounts } from '@/domain/use-cases'
+import { ICreateAccount } from '@/domain/use-cases/ICreateAccount'
 import { prisma } from '@/infra/prisma-client'
-import { IGetAccount } from '@/use-cases/IGetAccount'
+import { IGetAccount } from '@/domain/use-cases/IGetAccount'
 import DbGetAccount from '@/data/DbGetAccount'
 import DbChangeAccountType from '@/data/DbChangeAccountType'
 

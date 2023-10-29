@@ -7,7 +7,7 @@ import {
 } from './container'
 import { ChangeAccountTypeHandler, CreateAccountHandler, GetAccountHandler, ListAccountsHandler } from './actions'
 
-export class AppController {
+export class ApiController {
   constructor(private readonly app: Express) {}
 
   public async configureRoutes() {

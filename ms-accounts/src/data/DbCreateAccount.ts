@@ -1,8 +1,8 @@
-import { ICreateAccount } from '@/use-cases/ICreateAccount'
+import { ICreateAccount } from '@/domain/use-cases/ICreateAccount'
 import { DbError } from '@/validation/errors/DbError'
 import { CreateAccountValidator } from '@/validation/validators/CreateAccountValidator'
 import AccountsRepository from './DbAccountsRepository'
-import { CreateAccountInput, CreateAccountOuput } from '@/use-cases'
+import { CreateAccountInput, CreateAccountOuput } from '@/domain/use-cases'
 import { ValidationError } from '@/validation/errors/ValidationError'
 
 export default class DbCreateAccount implements ICreateAccount {

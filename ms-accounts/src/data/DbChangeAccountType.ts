@@ -1,10 +1,11 @@
-import { ChangeAccountTypeInput, IChangeAccountType, Result } from '@/use-cases'
+import { ChangeAccountTypeInput, IChangeAccountType, Result } from '@/domain/use-cases'
 import AccountsRepository from './DbAccountsRepository'
 import { DbError, HttpNotFoundError } from '@/validation/errors'
 import { ChangeAccountTypeValidator } from '@/validation/validators/ChangeAccountTypeValidator'
 
 export default class DbChangeAccountType implements IChangeAccountType {
   constructor(private readonly repository: AccountsRepository) {}
+
   async execute(input: ChangeAccountTypeInput): Promise<Result> {
     //validacoes etc
     var account = await this.repository.getAccount(input.accountId)
@@ -15,7 +16,7 @@ export default class DbChangeAccountType implements IChangeAccountType {
       }
     }
 
-    const validationResult = new ChangeAccountTypeValidator().validate(input)
+    const validationResult = new ChangeAccountTypeValidator(account).validate(input)
 
     if (!validationResult.isValid) {
       return {

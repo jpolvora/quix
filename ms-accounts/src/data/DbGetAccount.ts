@@ -1,5 +1,5 @@
-import { GetAccountInput, GetAccountOutput } from '@/use-cases'
-import { IGetAccount } from '@/use-cases/IGetAccount'
+import { GetAccountInput, GetAccountOutput } from '@/domain/use-cases'
+import { IGetAccount } from '@/domain/use-cases/IGetAccount'
 import AccountsRepository from './DbAccountsRepository'
 import { DbError } from '@/validation/errors/DbError'
 import { HttpNotFoundError } from '@/validation/errors/HttpNotFoundError'

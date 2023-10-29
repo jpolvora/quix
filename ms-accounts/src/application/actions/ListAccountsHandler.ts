@@ -1,4 +1,4 @@
-import { ListAccountsInput, ListAccountsOutput, IListAccounts } from '@/use-cases'
+import { ListAccountsInput, ListAccountsOutput, IListAccounts } from '@/domain/use-cases'
 import ActionHandler from './ActionHandler'
 import { Request } from 'express'
 

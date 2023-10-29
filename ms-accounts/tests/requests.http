@@ -6,7 +6,6 @@ content-type: application/json
     "accountType": "Corrente"
 }
 
-
 ###
 GET http://localhost:3001/list HTTP/1.1
 content-type: application/json
@@ -28,3 +27,12 @@ content-type: application/json
 ###
 GET http://localhost:3001/throw500 HTTP/1.1
 content-type: application/json
+
+###
+PATCH  http://localhost:3001/change-account-type HTTP/1.1
+content-type: application/json
+
+{
+    "accountId": "0cd5a079-7c34-4b0f-8027-fcbc89d9e9c8",
+    "newAccountType": "Corrente"
+}

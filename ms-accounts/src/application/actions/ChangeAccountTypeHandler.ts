@@ -1,4 +1,4 @@
-import { ChangeAccountTypeInput, ChangeAccountTypeOutput, IChangeAccountType } from '@/use-cases'
+import { ChangeAccountTypeInput, ChangeAccountTypeOutput, IChangeAccountType } from '@/domain/use-cases'
 import ActionHandler from './ActionHandler'
 
 export class ChangeAccountTypeHandler extends ActionHandler<

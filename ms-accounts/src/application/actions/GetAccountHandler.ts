@@ -1,6 +1,6 @@
-import { GetAccountInput, GetAccountOutput } from '@/use-cases'
+import { GetAccountInput, GetAccountOutput } from '@/domain/use-cases'
 import ActionHandler from './ActionHandler'
-import { IGetAccount } from '@/use-cases/IGetAccount'
+import { IGetAccount } from '@/domain/use-cases/IGetAccount'
 import { Request } from 'express'
 
 export class GetAccountHandler extends ActionHandler<GetAccountInput, GetAccountOutput, IGetAccount> {

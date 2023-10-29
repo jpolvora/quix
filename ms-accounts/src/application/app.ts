@@ -1,5 +1,5 @@
 import express, { Express, Request, Response, json } from 'express'
-import { AppController } from './AppController'
+import { ApiController } from './ApiController'
 import { NextFunction } from 'connect'
 import { DbError, ValidationError } from '@/validation/errors'
 
@@ -47,7 +47,7 @@ export async function setupApp(): Promise<Express> {
     throw error
   })
 
-  await new AppController(app).configureRoutes()
+  await new ApiController(app).configureRoutes()
 
   app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     console.error(err.stack)

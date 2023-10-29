@@ -1,4 +1,4 @@
-import { CreateAccountInput } from '@/use-cases'
+import { CreateAccountInput } from '@/domain/use-cases'
 import { ValidationResult } from '../ValidationResult'
 import { ValidationBase } from '../ValidationBase'
 
