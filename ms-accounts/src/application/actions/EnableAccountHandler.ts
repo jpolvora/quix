@@ -8,4 +8,8 @@ export class EnableAccountHandler extends ActionHandler<EnableAccountInput, Enab
     const input: EnableAccountInput = req.params['id']
     return input
   }
+
+  protected getSuccessStatusCode(): number {
+    return 204
+  }
 }

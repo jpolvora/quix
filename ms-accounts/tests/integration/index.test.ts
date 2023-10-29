@@ -259,4 +259,53 @@ describe('Business Tests', () => {
     //assert
     expect(res.statusCode).toBe(204)
   })
+
+  it('should return 404 when trying to disable non existing account', async () => {
+    //arrange
+    const sut = await setupApp()
+    //act
+    const res = await request(sut)
+      .patch(`/disable-account/${randomUUID()}`)
+      .set('Content-type', 'application/json')
+      .set('Authorization', 'password')
+
+    //console.log(res.body)
+
+    //assert
+    expect(res.statusCode).toBe(404)
+    expect(res.body.success).toBeFalsy()
+    expect(res.body.error).toBe(HttpNotFoundError.name)
+  })
+
+  it('should enable specific account', async () => {
+    //arrange
+    const sut = await setupApp()
+    //act
+    const res = await request(sut)
+      .patch(`/enable-account/${poupancaDisabled.id}`)
+      .set('Content-type', 'application/json')
+      .set('Authorization', 'password')
+
+    //console.log(res.body)
+
+    //assert
+    expect(res.statusCode).toBe(204)
+  })
+
+  it('should return 404 when trying to enable non existing account', async () => {
+    //arrange
+    const sut = await setupApp()
+    //act
+    const res = await request(sut)
+      .patch(`/enable-account/${randomUUID()}`)
+      .set('Content-type', 'application/json')
+      .set('Authorization', 'password')
+
+    //console.log(res.body)
+
+    //assert
+    expect(res.statusCode).toBe(404)
+    expect(res.body.success).toBeFalsy()
+    expect(res.body.error).toBe(HttpNotFoundError.name)
+  })
 })
