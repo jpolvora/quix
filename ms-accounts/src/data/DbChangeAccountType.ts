@@ -2,9 +2,13 @@ import { ChangeAccountTypeInput, HttpResult, IChangeAccountType, Result } from '
 import { AccountsRepository } from './DbAccountsRepository'
 import { DbError, EntityNotFoundError } from '@/validation/errors'
 import { ChangeAccountTypeValidator } from '@/validation/validators/ChangeAccountTypeValidator'
+import { AccountPublisher } from './AccountPublisher'
 
 export class DbChangeAccountType implements IChangeAccountType {
-  constructor(private readonly repository: AccountsRepository) {}
+  constructor(
+    private readonly repository: AccountsRepository,
+    private readonly publisher: AccountPublisher,
+  ) {}
 
   async execute(input: ChangeAccountTypeInput): Promise<HttpResult> {
     //validacoes etc
@@ -31,6 +35,8 @@ export class DbChangeAccountType implements IChangeAccountType {
 
     try {
       await this.repository.save(account)
+
+      await this.publisher.publishAccountTypeChanged(account)
 
       return {
         statusCode: 204,

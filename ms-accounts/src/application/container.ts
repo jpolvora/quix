@@ -13,7 +13,7 @@ import {
   DbChangeAccountType,
   DbDisableAccount,
   DbEnableAccount,
-  CreateAccountNotifier,
+  AccountPublisher,
 } from '@/data'
 import {
   ChangeAccountTypeHandler,
@@ -63,19 +63,19 @@ export function makeListAccountsUseCase(): IListAccounts {
 }
 
 export function makeCreateAccountUseCase(): ICreateAccount {
-  return new DbCreateAccount(new AccountsRepository(prisma), new CreateAccountNotifier())
+  return new DbCreateAccount(new AccountsRepository(prisma), new AccountPublisher())
 }
 
 export function makeChangeAccountTypeUseCase(): IChangeAccountType {
-  return new DbChangeAccountType(new AccountsRepository(prisma))
+  return new DbChangeAccountType(new AccountsRepository(prisma), new AccountPublisher())
 }
 
 export function makeDisableAccountUseCase(): IDisableAccount {
-  return new DbDisableAccount(new AccountsRepository(prisma))
+  return new DbDisableAccount(new AccountsRepository(prisma), new AccountPublisher())
 }
 
 export function makeEnableAccountUseCase(): IEnableAccount {
-  return new DbEnableAccount(new AccountsRepository(prisma))
+  return new DbEnableAccount(new AccountsRepository(prisma), new AccountPublisher())
 }
 
 // HANDLERS

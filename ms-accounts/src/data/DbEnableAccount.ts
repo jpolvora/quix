@@ -2,9 +2,13 @@ import { HttpResult } from '@/domain/use-cases'
 import { AccountsRepository } from './DbAccountsRepository'
 import { DbError, EntityNotFoundError } from '@/validation/errors'
 import { IEnableAccount } from '@/domain/use-cases/IEnableAccount'
+import { AccountPublisher } from './AccountPublisher'
 
 export class DbEnableAccount implements IEnableAccount {
-  constructor(private readonly repository: AccountsRepository) {}
+  constructor(
+    private readonly repository: AccountsRepository,
+    private readonly publisher: AccountPublisher,
+  ) {}
 
   async execute(input: string): Promise<HttpResult> {
     //validacoes etc
@@ -21,6 +25,7 @@ export class DbEnableAccount implements IEnableAccount {
 
     try {
       await this.repository.save(account)
+      await this.publisher.publishAccountEnabled(account)
 
       return {
         statusCode: 204,

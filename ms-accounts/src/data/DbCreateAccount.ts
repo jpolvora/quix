@@ -4,12 +4,12 @@ import { CreateAccountValidator } from '@/validation/validators/CreateAccountVal
 import { AccountsRepository } from './DbAccountsRepository'
 import { CreateAccountInput, CreateAccountOuput } from '@/domain/use-cases'
 import { ValidationError } from '@/validation/errors/ValidationError'
-import { CreateAccountNotifier } from './CreateAccountProducer'
+import { AccountPublisher } from './AccountPublisher'
 
 export class DbCreateAccount implements ICreateAccount {
   constructor(
     private readonly repository: AccountsRepository,
-    private readonly producer: CreateAccountNotifier,
+    private readonly publisher: AccountPublisher,
   ) {}
 
   async execute(input: CreateAccountInput): Promise<CreateAccountOuput> {
@@ -41,11 +41,7 @@ export class DbCreateAccount implements ICreateAccount {
         account_type: accountType,
       })
 
-      await this.producer.produce(
-        JSON.stringify({
-          ...data,
-        }),
-      )
+      await this.publisher.publishAccountCreated(account)
 
       return {
         statusCode: 201,

@@ -2,9 +2,13 @@ import { DisableAccountOutput } from '@/domain/use-cases'
 import { AccountsRepository } from './DbAccountsRepository'
 import { DbError, EntityNotFoundError } from '@/validation/errors'
 import { IDisableAccount } from '@/domain/use-cases/IDisableAccount'
+import { AccountPublisher } from './AccountPublisher'
 
 export class DbDisableAccount implements IDisableAccount {
-  constructor(private readonly repository: AccountsRepository) {}
+  constructor(
+    private readonly repository: AccountsRepository,
+    private readonly publisher: AccountPublisher,
+  ) {}
 
   async execute(input: string): Promise<DisableAccountOutput> {
     //validacoes etc
@@ -21,6 +25,7 @@ export class DbDisableAccount implements IDisableAccount {
 
     try {
       await this.repository.save(account)
+      await this.publisher.publishAccountDisabled(account)
 
       return {
         statusCode: 204,
