@@ -75,3 +75,9 @@ export type DepositInput = {
 export type DepositOutput = HttpResult & {
   balance: number
 }
+
+export type UpdateBalanceInput = AccountDTO
+
+export type UpdateBalanceOutput = Result & {
+  balance: string
+}

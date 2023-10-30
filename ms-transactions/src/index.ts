@@ -1,28 +1,30 @@
-import "dotenv/config"
-import "./register"
-import { Command } from 'commander';
-import { startApp } from '@/shared/utils/app';
-import { setupApp } from '@/application/app';
+import 'dotenv/config'
+import './register'
+import { Command } from 'commander'
+import { startApp } from '@/shared/utils/app'
+import { setupApp } from '@/application/app'
+import { setupConsumers } from './application/consumers'
 
 async function start() {
-    const options = new Command()
-        .option('-p, --port [VALUE]', 'http port', process.env.PORT || "3001")
-        .option('-e, --env [VALUE]', 'environment', process.env.NODE_ENV || "develop")
-        .parse(process.argv)
-        .opts();
+  const options = new Command()
+    .option('-p, --port [VALUE]', 'http port', process.env.PORT || '3001')
+    .option('-e, --env [VALUE]', 'environment', process.env.NODE_ENV || 'develop')
+    .parse(process.argv)
+    .opts()
 
-    const port = Number(options.port || process.env.PORT);
+  const port = Number(options.port || process.env.PORT)
 
-    if (!port) throw new Error("Invalid port")
+  if (!port) throw new Error('Invalid port')
 
-    if (options.env) process.env.NODE_ENV
+  if (options.env) process.env.NODE_ENV = options.env
 
-    const app = await setupApp();
-    await startApp(app, port);
+  const app = await setupApp()
 
-    if (process.send) process.send('ready') //pm2
+  await Promise.all([startApp(app, port), setupConsumers()])
 
-    console.log("ms-account started at port %s", port)
+  if (process.send) process.send('ready') //pm2
+
+  console.log('ms-transactions started at port %s', port)
 }
 
 start().catch(console.error.bind(console))

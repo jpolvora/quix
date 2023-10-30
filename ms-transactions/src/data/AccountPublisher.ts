@@ -1,14 +1,7 @@
 import { createMQProducer } from '@/infra/createMQProducer'
 import { AccountDTO } from './AccountDTO'
 import { TransactionDTO } from './TransactionDTO'
-
-export const AccountEvents = {
-  ACCOUNT_CREATED: 'ACCOUNT_CREATED',
-  ACCOUNT_CHANGED: 'ACCOUNT_CHANGED',
-  ACCOUNT_DISABLED: 'ACCOUNT_DISABLED',
-  ACCOUNT_ENABLED: 'ACCOUNT_ENABLED',
-  TRANSACTION_DEPOSIT: 'TRANSACTION_DEPOSIT',
-}
+import { AccountEvents } from '@/domain/AccountEvents'
 
 const ExchangeName = 'transactions'
 const ExchangeType = 'fanout'

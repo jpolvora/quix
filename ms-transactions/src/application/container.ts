@@ -36,6 +36,7 @@ import { prisma } from '@/infra/prisma-client'
 import { Request, Response } from 'express'
 import { IDeposit } from '@/domain/use-cases/IDeposit'
 import { DepositHandler } from './actions/DepositHandler'
+import { DbUpdateBalance } from '@/data/DbUpdateBalance'
 
 export type ServiceRegistration = {
   [key: string]: Function
@@ -67,8 +68,13 @@ export function makeEnableAccountUseCase(): IEnableAccount {
   return new DbEnableAccount(new AccountsRepository(prisma), new TransactionPublisher())
 }
 
-// HANDLERS
+// HANDLERS => HTTP
 
 export const makeDummyHandler = () => (req: Request, res: Response) => res.send(req.originalUrl)
 
 export const makeDepositHandler = () => new DepositHandler(makeDepositUseCase).getHandler()
+
+// HANDLERS => Consumers
+
+export const makeUpdateBalanceUseCase = () =>
+  new DbUpdateBalance(new AccountsRepository(prisma), new TransactionRepository(prisma), new TransactionPublisher())
