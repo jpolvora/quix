@@ -3,7 +3,7 @@ import './register'
 import { Command } from 'commander'
 import { startApp } from '@/shared/utils/app'
 import { setupApp } from '@/application/app'
-import { setupConsumers } from './application/consumers'
+import { adaptConsumersToUseCases } from './application/consumer-adapter-usecase'
 
 async function start() {
   const options = new Command()
@@ -20,7 +20,7 @@ async function start() {
 
   const app = await setupApp()
 
-  await Promise.all([startApp(app, port), setupConsumers()])
+  await Promise.all([startApp(app, port), adaptConsumersToUseCases()])
 
   if (process.send) process.send('ready') //pm2
 

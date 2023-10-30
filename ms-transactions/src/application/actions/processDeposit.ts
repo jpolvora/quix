@@ -8,5 +8,13 @@ export async function processDeposit(dto: AccountDTO): Promise<boolean> {
   //notificar
   const useCase: IUpdateBalance = makeUpdateBalanceUseCase()
 
-  return (await useCase.execute(dto)).success
+  const result = await useCase.execute(dto)
+
+  console.log(result)
+
+  if (result.error) {
+    //handle error
+  }
+
+  return result.success
 }

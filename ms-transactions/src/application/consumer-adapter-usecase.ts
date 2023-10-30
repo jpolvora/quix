@@ -4,12 +4,12 @@ import { processDeposit } from './actions/processDeposit'
 import { AccountDTO } from '@/data/AccountDTO'
 import { ConsumeMessage } from 'amqplib'
 
-export async function setupConsumers(): Promise<void> {
-  const consumer = await createConsumer(AccountEvents.TRANSACTION_DEPOSIT)
-  consumer(depositHandler)
+export async function adaptConsumersToUseCases(): Promise<void> {
+  const consumeQueue = await createConsumer(AccountEvents.TRANSACTION_DEPOSIT)
+  consumeQueue(depositEventHandler)
 }
 
-async function depositHandler(msg: ConsumeMessage): Promise<boolean> {
+async function depositEventHandler(msg: ConsumeMessage): Promise<boolean> {
   console.log('depositHandler', msg)
 
   const dto = JSON.parse(msg.content.toString()) as AccountDTO

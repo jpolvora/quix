@@ -1,3 +1,4 @@
+import { Decimal } from '@prisma/client/runtime/library'
 import { AccountDTO } from './AccountDTO'
 import { PrismaClient } from '@prisma/client'
 
@@ -42,5 +43,21 @@ export class AccountsRepository {
         id: input.id,
       },
     })
+  }
+
+  async updateBalance(accountId: string, balance: Decimal) {
+    try {
+      const result = await this.prisma.accounts.update({
+        where: {
+          id: accountId,
+        },
+        data: {
+          balance,
+        },
+      })
+      return result
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

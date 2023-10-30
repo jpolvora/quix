@@ -67,6 +67,10 @@ export const AccountTypes = {
   Corrente: 'Corrente',
 }
 
+export const TRANSACTION_TYPES = {
+  CASH_DEPOSIT: 'CASH_DEPOSIT',
+}
+
 export type DepositInput = {
   accountId: string
   amount: number

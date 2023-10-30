@@ -3,7 +3,7 @@ import { AccountDTO } from './AccountDTO'
 import { TransactionDTO } from './TransactionDTO'
 import { AccountEvents } from '@/domain/AccountEvents'
 
-const ExchangeName = 'transactions'
+const ExchangeName = 'balance'
 const ExchangeType = 'fanout'
 
 export class TransactionPublisher {
@@ -51,6 +51,16 @@ export class TransactionPublisher {
     try {
       const msg = JSON.stringify(dto)
       const producer = await createMQProducer(AccountEvents.TRANSACTION_DEPOSIT, ExchangeName, ExchangeType, true)
+      return producer(msg)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async publishBalanceUpdated(dto: AccountDTO) {
+    try {
+      const msg = JSON.stringify(dto)
+      const producer = await createMQProducer(AccountEvents.BALANCE_UPDATED, ExchangeName, ExchangeType, true)
       return producer(msg)
     } catch (error) {
       console.error(error)
