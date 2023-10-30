@@ -23,6 +23,7 @@ export default abstract class ActionHandler<
     try {
       const useCase = this.useCaseFactory()
       const input = this.getInput(req)
+      console.log(input)
       const output: TOutput = await useCase.execute(input)
 
       if (output.success) {

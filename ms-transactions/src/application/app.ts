@@ -32,7 +32,7 @@ export async function setupApp(): Promise<Express> {
 
   app.get('/', (_, res) => {
     return res.json({
-      message: 'Welcome to accounts microservice',
+      message: 'Welcome to TRANSACTIONS microservice',
     })
   })
 

@@ -66,3 +66,12 @@ export const AccountTypes = {
   Poupança: 'Poupança',
   Corrente: 'Corrente',
 }
+
+export type DepositInput = {
+  accountId: string
+  amount: number
+}
+
+export type DepositOutput = HttpResult & {
+  balance: number
+}

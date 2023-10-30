@@ -1,13 +1,13 @@
 import { ChangeAccountTypeInput, HttpResult, IChangeAccountType, Result } from '@/domain/use-cases'
-import { AccountsRepository } from './DbAccountsRepository'
+import { AccountsRepository } from './AccountsRepository'
 import { DbError, EntityNotFoundError } from '@/validation/errors'
 import { ChangeAccountTypeValidator } from '@/validation/validators/ChangeAccountTypeValidator'
-import { AccountPublisher } from './AccountPublisher'
+import { TransactionPublisher } from './AccountPublisher'
 
 export class DbChangeAccountType implements IChangeAccountType {
   constructor(
     private readonly repository: AccountsRepository,
-    private readonly publisher: AccountPublisher,
+    private readonly publisher: TransactionPublisher,
   ) {}
 
   async execute(input: ChangeAccountTypeInput): Promise<HttpResult> {

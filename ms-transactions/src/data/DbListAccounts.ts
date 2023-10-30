@@ -1,6 +1,6 @@
 import { calcSkip } from '@/shared/utils/fns'
 import { IListAccounts, ListAccountsInput, ListAccountsOutput } from '@/domain/use-cases'
-import { AccountsRepository } from './DbAccountsRepository'
+import { AccountsRepository } from './AccountsRepository'
 
 export class DbListAccounts implements IListAccounts {
   constructor(private readonly repository: AccountsRepository) {}

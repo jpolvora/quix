@@ -1,13 +1,13 @@
 import { DisableAccountOutput } from '@/domain/use-cases'
-import { AccountsRepository } from './DbAccountsRepository'
+import { AccountsRepository } from './AccountsRepository'
 import { DbError, EntityNotFoundError } from '@/validation/errors'
 import { IDisableAccount } from '@/domain/use-cases/IDisableAccount'
-import { AccountPublisher } from './AccountPublisher'
+import { TransactionPublisher } from './AccountPublisher'
 
 export class DbDisableAccount implements IDisableAccount {
   constructor(
     private readonly repository: AccountsRepository,
-    private readonly publisher: AccountPublisher,
+    private readonly publisher: TransactionPublisher,
   ) {}
 
   async execute(input: string): Promise<DisableAccountOutput> {

@@ -8,6 +8,16 @@ content-type: application/json
 }
 
 ###
+
+POST http://localhost:3002/deposit/111994c7-81e7-4614-ad1f-9bb927751e14 HTTP/1.1
+content-type: application/json
+
+{
+    "amount": "123.45"    
+}
+
+
+###
 GET http://localhost:3001/list HTTP/1.1
 content-type: application/json
 

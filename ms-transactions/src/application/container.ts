@@ -7,13 +7,14 @@
 
 import {
   AccountsRepository,
-  DbCreateAccount,
+  DbDeposit,
   DbListAccounts,
   DbGetAccount,
   DbChangeAccountType,
   DbDisableAccount,
   DbEnableAccount,
-  AccountPublisher,
+  TransactionPublisher,
+  TransactionRepository,
 } from '@/data'
 import {
   ChangeAccountTypeHandler,
@@ -32,21 +33,9 @@ import {
   IEnableAccount,
 } from '@/domain/use-cases'
 import { prisma } from '@/infra/prisma-client'
-
-// const TYPES = {
-//     ListAccounts: Symbol.for("ListAccounts"),
-//     CreateAccount: Symbol.for("CreateAccount"),
-//     AccountRespository: Symbol.for("AccountRespository"),
-//     PrismaClientWrapper: Symbol.for("PrismaClientWrapper")
-// }
-
-// //const appContainer = new Container();
-// // appContainer.bind<IListAccounts>(TYPES.ListAccounts).to(DbListAccounts).inTransientScope();
-// // appContainer.bind<ICreateAccount>(TYPES.CreateAccount).to(DbCreateAccount).inTransientScope();
-// // appContainer.bind<IPrismaClientWrapper>(TYPES.PrismaClientWrapper).to(PrismaClientWrapper).inSingletonScope();
-// // appContainer.bind<AccountsRepository>(TYPES.AccountRespository).toSelf().inTransientScope();
-
-// //export { TYPES, appContainer }
+import { Request, Response } from 'express'
+import { IDeposit } from '@/domain/use-cases/IDeposit'
+import { DepositHandler } from './actions/DepositHandler'
 
 export type ServiceRegistration = {
   [key: string]: Function
@@ -62,32 +51,24 @@ export function makeListAccountsUseCase(): IListAccounts {
   return new DbListAccounts(new AccountsRepository(prisma))
 }
 
-export function makeCreateAccountUseCase(): ICreateAccount {
-  return new DbCreateAccount(new AccountsRepository(prisma), new AccountPublisher())
+export function makeDepositUseCase(): IDeposit {
+  return new DbDeposit(new AccountsRepository(prisma), new TransactionRepository(prisma), new TransactionPublisher())
 }
 
 export function makeChangeAccountTypeUseCase(): IChangeAccountType {
-  return new DbChangeAccountType(new AccountsRepository(prisma), new AccountPublisher())
+  return new DbChangeAccountType(new AccountsRepository(prisma), new TransactionPublisher())
 }
 
 export function makeDisableAccountUseCase(): IDisableAccount {
-  return new DbDisableAccount(new AccountsRepository(prisma), new AccountPublisher())
+  return new DbDisableAccount(new AccountsRepository(prisma), new TransactionPublisher())
 }
 
 export function makeEnableAccountUseCase(): IEnableAccount {
-  return new DbEnableAccount(new AccountsRepository(prisma), new AccountPublisher())
+  return new DbEnableAccount(new AccountsRepository(prisma), new TransactionPublisher())
 }
 
 // HANDLERS
 
-export const makeListAccountHandler = () => new ListAccountsHandler(makeListAccountsUseCase).getHandler()
+export const makeDummyHandler = () => (req: Request, res: Response) => res.send(req.originalUrl)
 
-export const makeGetAccountHandler = () => new GetAccountHandler(makeGetAccountUseCase).getHandler()
-
-export const makeCreateAccountHandler = () => new CreateAccountHandler(makeCreateAccountUseCase).getHandler()
-
-export const makeChangeAccountHandler = () => new ChangeAccountTypeHandler(makeChangeAccountTypeUseCase).getHandler()
-
-export const makeDisableAccountHandler = () => new DisableAccountHandler(makeDisableAccountUseCase).getHandler()
-
-export const makeEnableAccountHandler = () => new EnableAccountHandler(makeEnableAccountUseCase).getHandler()
+export const makeDepositHandler = () => new DepositHandler(makeDepositUseCase).getHandler()
