@@ -25,6 +25,7 @@ import { DbChangeAccountType } from '@/data'
 import { IDisableAccount } from '@/domain/use-cases/IDisableAccount'
 import { DbDisableAccount } from '@/data/DbDisableAccount'
 import { DbEnableAccount } from '@/data/DbEnableAccount'
+import { CreateAccountNotifier } from '@/data/CreateAccountProducer'
 
 // const TYPES = {
 //     ListAccounts: Symbol.for("ListAccounts"),
@@ -56,7 +57,7 @@ export function makeListAccountsUseCase(): IListAccounts {
 }
 
 export function makeCreateAccountUseCase(): ICreateAccount {
-  return new DbCreateAccount(new AccountsRepository(prisma))
+  return new DbCreateAccount(new AccountsRepository(prisma), new CreateAccountNotifier())
 }
 
 export function makeChangeAccountTypeUseCase(): IChangeAccountType {
