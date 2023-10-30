@@ -1,24 +1,6 @@
 version: "3"
 
 services:
-  app_proxy:
-    image: "node:20-alpine"
-    container_name: app_proxy_container
-    user: "node"
-    working_dir: /home/node/app
-    volumes:
-      - ./:/home/node/app
-    command: ["npm", "run", "start:proxy"]
-    environment:
-      - PORT=3000
-      - API_ACCOUNTS=http://app_accounts:3001
-      - API_TRANSACTIONS=http://app_transactions:3002
-    ports:
-      - "3000:3000"
-    depends_on:
-      - app_accounts
-      - app_transactions
-
   app_accounts:
     image: "node:20-alpine"
     container_name: app_accounts_container
@@ -26,42 +8,31 @@ services:
     working_dir: /home/node/app
     volumes:
       - ./:/home/node/app
-    command: ["npm", "run", "start:account"]
+    command: ["npm", "run", "start"]
     environment:
       - PORT=3001
       - RABBITMQ_HOST=rabbitmq
+      - DATABASE_URL=postgresql://postgres:pgsql@postgres_account:5432/quix-accounts?schema=public
     ports:
-      - "3001:3001"
+      - 3001:3001
+      - 9229:9229
+    depends_on:
+      - postgres
+      - pgadmin
 
-  app_transactions:
-    image: "node:20-alpine"
-    container_name: app_transactions_container
-    user: "node"
-    working_dir: /home/node/app
-    volumes:
-      - ./:/home/node/app
-    command: ["npm", "run", "start:transactions"]
-    environment:
-      - PORT=3002
-      - RABBITMQ_HOST=rabbitmq
-    ports:
-      - "3002:3002"
-    #profiles:
-    #- donotstart
-
-  postgres:
+  postgres_account:
     image: postgres
-    container_name: postgres_container
+    container_name: postgres_account-container
     environment:
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin123"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "pgsql"
       PGDATA: /data/postgres
     ports:
       - "5432:5432"
     volumes:
       - ./.tmp/postgres_data:/data/postgres
-    profiles:
-      - donotstart
+    # profiles:
+    #   - donotstart
 
   pgadmin:
     container_name: pgadmin_container
@@ -72,32 +43,32 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: "False"
     ports:
       - "5050:80"
-    profiles:
-      - donotstart
+    # profiles:
+    #   - donotstart
 
-  rabbitmq:
-    image: "rabbitmq:3.8-management-alpine"
-    container_name: rabbitmq_container
-    hostname: rabbitmq
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    volumes:
-      - "./.tmp/rabbitmq_data:/var/lib/rabbitmq/mnesia"
-    environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=admin
-    profiles:
-      - donotstart
+  # rabbitmq:
+  #   image: "rabbitmq:3.8-management-alpine"
+  #   container_name: rabbitmq_container
+  #   hostname: rabbitmq
+  #   ports:
+  #     - "15672:15672"
+  #     - "5672:5672"
+  #   volumes:
+  #     - "./.tmp/rabbitmq_data:/var/lib/rabbitmq/mnesia"
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=admin
+  #     - RABBITMQ_DEFAULT_PASS=admin
+  #   profiles:
+  #     - donotstart
 
-  redis:
-    image: redis:6.2-alpine
-    container_name: redis_container
-    restart: always
-    ports:
-      - "6379:6379"
-    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-    volumes:
-      - ./.tmp/redis_data:/data
-    profiles:
-      - donotstart
+  # redis:
+  #   image: redis:6.2-alpine
+  #   container_name: redis_container
+  #   restart: always
+  #   ports:
+  #     - "6379:6379"
+  #   command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+  #   volumes:
+  #     - ./.tmp/redis_data:/data
+  #   profiles:
+  #     - donotstart

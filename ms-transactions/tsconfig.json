@@ -5,13 +5,29 @@
     "target": "es2019",
     "esModuleInterop": true,
     "sourceMap": true,
-    "rootDirs": ["src", "tests", "prisma"],
+    "rootDirs": [
+      "src",
+      "tests",
+      "prisma"
+    ],
     "baseUrl": "src",
     "paths": {
-      "@/tests/*": ["../tests/*"],
-      "@/*": ["*"]
+      "@/tests/*": [
+        "../tests/*"
+      ],
+      "@/*": [
+        "*"
+      ]
     }
   },
-  "include": ["src", "tests"],
-  "exclude": ["dist", "doc"]
+  "include": [
+    "src",
+    "tests",
+    "prisma"
+  ],
+  "exclude": [
+    "dist",
+    "doc",
+    "docs"
+  ]
 }

@@ -1,7 +1,63 @@
-POST http://localhost:8081/users HTTP/1.1
+
+POST http://localhost:3001/create HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Jone Polvora",
-    "email": "jpolvora@gmail.com"
+    "id": "111994c7-81e7-4614-ad1f-9bb927751e14",
+    "accountType": "Corrente"
 }
+
+###
+GET http://localhost:3001/list HTTP/1.1
+content-type: application/json
+
+
+###
+GET http://localhost:3001/get/111994c7-81ea-4614-ad1f-9bb927751e10 HTTP/1.1
+content-type: application/json
+
+###
+
+GET http://localhost:3001/get/52bca67c-e99e-495f-b372-2bcf8e1db815 HTTP/1.1
+content-type: application/json
+
+###
+GET http://localhost:3001/throw400 HTTP/1.1
+content-type: application/json
+
+###
+GET http://localhost:3001/throw500 HTTP/1.1
+content-type: application/json
+
+###
+PATCH  http://localhost:3001/change-account-type HTTP/1.1
+content-type: application/json
+
+{
+    "accountId": "0cd5a079-7c34-4b0f-8027-fcbc89d9e9c8",
+    "newAccountType": "Corrente"
+}
+
+###
+PATCH  http://localhost:3001/change-account-type HTTP/1.1
+content-type: application/json
+
+{
+    "accountId": "0cd5a079-7c34-4b0f-8027-fcbc89d9e9c8",
+    "newAccountType": "Corrente"
+}
+
+###
+
+PATCH  http://localhost:3001/disable-account/111994c7-81e7-4614-ad1f-9bb927751e13 HTTP/1.1
+content-type: application/json
+
+###
+
+PATCH  http://localhost:3001/enable-account/111994c7-81e7-4614-ad1f-9bb927751e13 HTTP/1.1
+content-type: application/json
+
+###
+
+GET  http://localhost:3001/get/111994c7-81e7-4614-ad1f-9bb927751e13 HTTP/1.1
+content-type: application/json
