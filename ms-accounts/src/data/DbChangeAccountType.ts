@@ -1,18 +1,19 @@
-import { ChangeAccountTypeInput, IChangeAccountType, Result } from '@/domain/use-cases'
-import AccountsRepository from './DbAccountsRepository'
-import { DbError, HttpNotFoundError } from '@/validation/errors'
+import { ChangeAccountTypeInput, HttpResult, IChangeAccountType, Result } from '@/domain/use-cases'
+import { AccountsRepository } from './DbAccountsRepository'
+import { DbError, EntityNotFoundError } from '@/validation/errors'
 import { ChangeAccountTypeValidator } from '@/validation/validators/ChangeAccountTypeValidator'
 
 export class DbChangeAccountType implements IChangeAccountType {
   constructor(private readonly repository: AccountsRepository) {}
 
-  async execute(input: ChangeAccountTypeInput): Promise<Result> {
+  async execute(input: ChangeAccountTypeInput): Promise<HttpResult> {
     //validacoes etc
     var account = await this.repository.getAccount(input.accountId)
     if (!account) {
       return {
+        statusCode: 404,
         success: false,
-        error: new HttpNotFoundError(),
+        error: new EntityNotFoundError(),
       }
     }
 
@@ -20,6 +21,7 @@ export class DbChangeAccountType implements IChangeAccountType {
 
     if (!validationResult.isValid) {
       return {
+        statusCode: 400,
         success: false,
         error: validationResult.error,
       }
@@ -31,11 +33,13 @@ export class DbChangeAccountType implements IChangeAccountType {
       await this.repository.save(account)
 
       return {
+        statusCode: 204,
         success: true,
         error: undefined,
       }
     } catch (error) {
       return {
+        statusCode: 500,
         success: false,
         error: new DbError(error),
       }

@@ -5,8 +5,4 @@ export class ChangeAccountTypeHandler extends ActionHandler<
   ChangeAccountTypeInput,
   ChangeAccountTypeOutput,
   IChangeAccountType
-> {
-  protected getSuccessStatusCode(): number {
-    return 204
-  }
-}
+> {}

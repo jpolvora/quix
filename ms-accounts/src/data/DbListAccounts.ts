@@ -1,8 +1,8 @@
 import { calcSkip } from '@/shared/utils/fns'
 import { IListAccounts, ListAccountsInput, ListAccountsOutput } from '@/domain/use-cases'
-import AccountsRepository from './DbAccountsRepository'
+import { AccountsRepository } from './DbAccountsRepository'
 
-export default class DbListAccounts implements IListAccounts {
+export class DbListAccounts implements IListAccounts {
   constructor(private readonly repository: AccountsRepository) {}
 
   async execute(input: ListAccountsInput): Promise<ListAccountsOutput> {
@@ -12,6 +12,7 @@ export default class DbListAccounts implements IListAccounts {
     const data = await this.repository.getAccounts(skip, pageSize)
 
     return {
+      statusCode: 200,
       total,
       success: true,
       data,

@@ -1,8 +1,8 @@
-import Validation from './Validation'
+import IValidation from './IValidation'
 import { ValidationResult } from './ValidationResult'
 import { ValidationError, MissingParamError } from './errors'
 
-export abstract class ValidationBase<T> implements Validation<T> {
+export abstract class ValidationBase<T> implements IValidation<T> {
   static CreateMissingParameterError(parameterName: string): ValidationResult {
     return {
       error: new MissingParamError(parameterName),

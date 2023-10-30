@@ -1,4 +1,5 @@
 export * from './DbError'
-export * from './HttpNotFoundError'
+export * from './EntityNotFoundError'
 export * from './MissingParamError'
 export * from './ValidationError'
+export * from './IHaveStatusCode'

@@ -5,14 +5,16 @@
 // import AccountsRepository from "@/data/DbAccountsRepository";
 // import { IPrismaClientWrapper, PrismaClientWrapper } from '@/infra/prisma-client'
 
-import AccountsRepository from '@/data/DbAccountsRepository'
-import DbCreateAccount from '@/data/DbCreateAccount'
-import DbListAccounts from '@/data/DbListAccounts'
-import { IChangeAccountType, IListAccounts } from '@/domain/use-cases'
-import { ICreateAccount } from '@/domain/use-cases/ICreateAccount'
-import { prisma } from '@/infra/prisma-client'
-import { IGetAccount } from '@/domain/use-cases/IGetAccount'
-import DbGetAccount from '@/data/DbGetAccount'
+import {
+  AccountsRepository,
+  DbCreateAccount,
+  DbListAccounts,
+  DbGetAccount,
+  DbChangeAccountType,
+  DbDisableAccount,
+  DbEnableAccount,
+  CreateAccountNotifier,
+} from '@/data'
 import {
   ChangeAccountTypeHandler,
   CreateAccountHandler,
@@ -21,11 +23,15 @@ import {
   GetAccountHandler,
   ListAccountsHandler,
 } from './actions'
-import { DbChangeAccountType } from '@/data'
-import { IDisableAccount } from '@/domain/use-cases/IDisableAccount'
-import { DbDisableAccount } from '@/data/DbDisableAccount'
-import { DbEnableAccount } from '@/data/DbEnableAccount'
-import { CreateAccountNotifier } from '@/data/CreateAccountProducer'
+import {
+  ICreateAccount,
+  IChangeAccountType,
+  IDisableAccount,
+  IListAccounts,
+  IGetAccount,
+  IEnableAccount,
+} from '@/domain/use-cases'
+import { prisma } from '@/infra/prisma-client'
 
 // const TYPES = {
 //     ListAccounts: Symbol.for("ListAccounts"),
@@ -68,7 +74,7 @@ export function makeDisableAccountUseCase(): IDisableAccount {
   return new DbDisableAccount(new AccountsRepository(prisma))
 }
 
-export function makeEnableAccountUseCase(): IDisableAccount {
+export function makeEnableAccountUseCase(): IEnableAccount {
   return new DbEnableAccount(new AccountsRepository(prisma))
 }
 

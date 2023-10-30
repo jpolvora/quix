@@ -1,7 +1,7 @@
 import { AccountDTO } from './AccountDTO'
 import { PrismaClient } from '@prisma/client'
 
-export default class AccountsRepository {
+export class AccountsRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   async getAccount(id: string): Promise<AccountDTO | null> {

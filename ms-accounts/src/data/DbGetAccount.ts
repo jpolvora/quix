@@ -1,10 +1,10 @@
 import { GetAccountInput, GetAccountOutput } from '@/domain/use-cases'
 import { IGetAccount } from '@/domain/use-cases/IGetAccount'
-import AccountsRepository from './DbAccountsRepository'
+import { AccountsRepository } from './DbAccountsRepository'
 import { DbError } from '@/validation/errors/DbError'
-import { HttpNotFoundError } from '@/validation/errors/HttpNotFoundError'
+import { EntityNotFoundError } from '@/validation/errors'
 
-export default class DbGetAccount implements IGetAccount {
+export class DbGetAccount implements IGetAccount {
   constructor(private readonly repository: AccountsRepository) {}
 
   async execute(id: GetAccountInput): Promise<GetAccountOutput> {
@@ -13,15 +13,18 @@ export default class DbGetAccount implements IGetAccount {
 
       if (!account)
         return {
+          statusCode: 404,
           success: false,
-          error: new HttpNotFoundError(),
+          error: new EntityNotFoundError(),
         }
       return {
+        statusCode: 200,
         success: true,
         data: account,
       }
     } catch (er) {
       return {
+        statusCode: 500,
         success: false,
         error: new DbError(er),
       }

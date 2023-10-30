@@ -8,8 +8,4 @@ export class DisableAccountHandler extends ActionHandler<DisableAccountInput, Di
     const input: DisableAccountInput = req.params['id']
     return input
   }
-
-  protected getSuccessStatusCode(): number {
-    return 204
-  }
 }

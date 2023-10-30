@@ -1,7 +1,6 @@
-import express, { Express, Request, Response, json } from 'express'
+import express, { Express, NextFunction, Request, Response, json } from 'express'
 import { ApiController } from './ApiController'
-import { NextFunction } from 'connect'
-import { DbError, HttpNotFoundError, ValidationError } from '@/validation/errors'
+import { DbError, EntityNotFoundError, ValidationError } from '@/validation/errors'
 
 export async function setupApp(): Promise<Express> {
   //ensure services connected before proceed ()
@@ -51,7 +50,7 @@ export async function setupApp(): Promise<Express> {
 
   //global 404 error handler
   app.use((_req: Request, _res: Response, next: NextFunction) => {
-    return next(new HttpNotFoundError())
+    return next(new EntityNotFoundError())
   })
 
   app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
@@ -59,7 +58,7 @@ export async function setupApp(): Promise<Express> {
 
     let statusCode = 500
     if (err instanceof ValidationError) statusCode = 400
-    if (err instanceof HttpNotFoundError) statusCode = 404
+    if (err instanceof EntityNotFoundError) statusCode = 404
     if (err instanceof DbError) statusCode = 500
 
     return res.status(statusCode).json({

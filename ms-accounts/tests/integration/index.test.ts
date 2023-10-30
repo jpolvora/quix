@@ -2,7 +2,7 @@ import { prisma } from '@/infra/prisma-client'
 import { poupancaEnabled, poupancaDisabled, correnteEnabled, correnteDisabled, accountToCreateAndVerify } from './data'
 import { agent as request } from 'supertest'
 import { setupApp } from '@/application/app'
-import { HttpNotFoundError, MissingParamError, ValidationError } from '@/validation/errors'
+import { EntityNotFoundError, MissingParamError, ValidationError } from '@/validation/errors'
 import { randomUUID } from 'crypto'
 import { AccountTypes } from '@/domain/use-cases'
 
@@ -219,7 +219,7 @@ describe('Business Tests', () => {
     //assert
     expect(res.statusCode).toBe(404)
     expect(res.body.success).toBeFalsy()
-    expect(res.body.error).toBe(HttpNotFoundError.name)
+    expect(res.body.error).toBe(EntityNotFoundError.name)
   })
 
   it('should NOT change account when invalid account type', async () => {
@@ -274,7 +274,7 @@ describe('Business Tests', () => {
     //assert
     expect(res.statusCode).toBe(404)
     expect(res.body.success).toBeFalsy()
-    expect(res.body.error).toBe(HttpNotFoundError.name)
+    expect(res.body.error).toBe(EntityNotFoundError.name)
   })
 
   it('should enable specific account', async () => {
@@ -306,6 +306,6 @@ describe('Business Tests', () => {
     //assert
     expect(res.statusCode).toBe(404)
     expect(res.body.success).toBeFalsy()
-    expect(res.body.error).toBe(HttpNotFoundError.name)
+    expect(res.body.error).toBe(EntityNotFoundError.name)
   })
 })

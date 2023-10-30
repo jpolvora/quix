@@ -1,7 +1,6 @@
 import { AccountTypes, ChangeAccountTypeInput } from '@/domain/use-cases'
-import { ValidationResult } from '../ValidationResult'
-import { ValidationBase } from '../ValidationBase'
 import { AccountDTO } from '@/data/AccountDTO'
+import { ValidationBase, ValidationResult } from '../'
 
 export class ChangeAccountTypeValidator implements ValidationBase<ChangeAccountTypeInput> {
   constructor(private readonly account: AccountDTO) {}

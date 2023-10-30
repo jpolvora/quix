@@ -1,18 +1,18 @@
 import { createInputFromRequest } from '@/shared/utils/app'
-import { IUseCase, Result } from '@/domain/use-cases'
-import { DbError, HttpNotFoundError, MissingParamError, ValidationError } from '@/validation/errors'
+import { HttpResult, IUseCase, Result } from '@/domain/use-cases'
+import { DbError, EntityNotFoundError, MissingParamError, ValidationError } from '@/validation/errors'
 import { NextFunction, Request, Response } from 'express'
 
-export default abstract class ActionHandler<TInput, TOutput extends Result, UseCase extends IUseCase<TInput, TOutput>> {
+export default abstract class ActionHandler<
+  TInput,
+  TOutput extends HttpResult,
+  UseCase extends IUseCase<TInput, TOutput>,
+> {
   constructor(private readonly useCaseFactory: () => UseCase) {}
 
   protected getInput(req: Request): TInput {
     const input: TInput = createInputFromRequest<TInput>(req)
     return input
-  }
-
-  protected getSuccessStatusCode(): number {
-    return 200
   }
 
   public getHandler() {
@@ -23,21 +23,21 @@ export default abstract class ActionHandler<TInput, TOutput extends Result, UseC
     try {
       const useCase = this.useCaseFactory()
       const input = this.getInput(req)
-      const output = await useCase.execute(input)
+      const output: TOutput = await useCase.execute(input)
 
       if (output.success) {
         //log
-        res.status(this.getSuccessStatusCode()).json(output)
+        res.status(output.statusCode).json(output)
       } else {
         //log
-        this.handleError(output.error, res, next)
+        this.handleError(output.statusCode, output.error, res, next)
       }
     } catch (error) {
-      this.handleError(error, res, next)
+      this.handleError(500, error, res, next)
     }
   }
 
-  private handleError(error: Error, res: Response, next: NextFunction) {
+  private handleError(statusCode: number, error: Error, res: Response, next: NextFunction) {
     if (!error) return next(new Error('unknow error'))
 
     console.log(error)
@@ -51,7 +51,7 @@ export default abstract class ActionHandler<TInput, TOutput extends Result, UseC
       },
     }
 
-    if (error instanceof HttpNotFoundError) {
+    if (error instanceof EntityNotFoundError) {
       return res.status(404).json({
         succces: false,
         error: error.name,

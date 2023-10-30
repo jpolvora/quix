@@ -1,5 +1,5 @@
 import { AccountDTO } from '@/data/AccountDTO'
-import { HttpNotFoundError } from '@/validation/errors/HttpNotFoundError'
+import { DbError, EntityNotFoundError } from '@/validation/errors'
 import { MissingParamError } from '@/validation/errors/MissingParamError'
 import { ValidationError } from '@/validation/errors/ValidationError'
 
@@ -9,10 +9,14 @@ export interface IUseCase<TInput, TOuput extends Result> {
 
 export type Result = {
   success: boolean
-  error?: ValidationError | MissingParamError | HttpNotFoundError
+  error?: ValidationError | MissingParamError | EntityNotFoundError | DbError
 }
 
-export type PagedResult = Result &
+export type HttpResult = Result & {
+  statusCode: number
+}
+
+export type PagedResult = HttpResult &
   Paging & {
     total: number
   }
@@ -27,13 +31,13 @@ export type CreateAccountInput = {
   accountType: string
 }
 
-export type CreateAccountOuput = Result & {
+export type CreateAccountOuput = HttpResult & {
   data?: AccountDTO
 }
 
 export type GetAccountInput = string
 
-export type GetAccountOutput = Result & {
+export type GetAccountOutput = HttpResult & {
   data?: AccountDTO
 }
 
@@ -48,15 +52,15 @@ export type ChangeAccountTypeInput = {
   newAccountType: string
 }
 
-export type ChangeAccountTypeOutput = Result
+export type ChangeAccountTypeOutput = HttpResult & {}
 
 export type DisableAccountInput = string
 
-export type DisableAccountOutput = Result
+export type DisableAccountOutput = HttpResult
 
 export type EnableAccountInput = string
 
-export type EnableAccountOutput = Result
+export type EnableAccountOutput = HttpResult
 
 export const AccountTypes = {
   Poupança: 'Poupança',
