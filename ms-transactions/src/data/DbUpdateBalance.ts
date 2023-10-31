@@ -1,8 +1,7 @@
 import { AccountsRepository, TransactionRepository } from '.'
-import { TRANSACTION_TYPES, UpdateBalanceOutput } from '@/domain/use-cases'
-import { TransactionPublisher } from './AccountPublisher'
+import { TRANSACTION_TYPES, UpdateBalanceInput, UpdateBalanceOutput } from '@/domain/use-cases'
+import { TransactionPublisher } from './TransactionPublisher'
 import { IUpdateBalance } from '@/domain/use-cases/IUpdateBalance'
-import { AccountDTO } from './AccountDTO'
 import { Decimal } from '@prisma/client/runtime/library'
 
 export class DbUpdateBalance implements IUpdateBalance {
@@ -12,9 +11,14 @@ export class DbUpdateBalance implements IUpdateBalance {
     private readonly publisher: TransactionPublisher,
   ) {}
 
-  async execute(input: AccountDTO): Promise<UpdateBalanceOutput> {
+  async execute(input: UpdateBalanceInput): Promise<UpdateBalanceOutput> {
+    if (!input.accountId)
+      return {
+        success: false,
+        balance: '0',
+      }
     //recuperar todas as transactions do jovem
-    const transactions = await this.transactionsRepository.getAllTransactionsByAccount(input.id)
+    const transactions = await this.transactionsRepository.getAllTransactionsByAccount(input.accountId)
     //calcular saldo
     const balance = transactions
       .filter((x) => x.type === TRANSACTION_TYPES.CASH_DEPOSIT)
@@ -24,7 +28,7 @@ export class DbUpdateBalance implements IUpdateBalance {
     console.log('novo saldo: ', balance)
     //atualizar saldo
     try {
-      const updated = await this.accountsRepository.updateBalance(input.id, balance)
+      const updated = await this.accountsRepository.updateBalance(input.accountId, balance)
       //enviar notificacao de atualizar saldo
       this.publisher.publishBalanceUpdated(updated)
     } catch (error) {}

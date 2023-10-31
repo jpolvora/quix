@@ -1,7 +1,7 @@
 import { DbError } from '@/validation/errors/DbError'
 import { AccountsRepository, TransactionRepository } from '.'
 import { DepositInput, DepositOutput } from '@/domain/use-cases'
-import { TransactionPublisher } from './AccountPublisher'
+import { TransactionPublisher } from './TransactionPublisher'
 import { IDeposit } from '@/domain/use-cases/IDeposit'
 import { EntityNotFoundError } from '@/validation/errors'
 

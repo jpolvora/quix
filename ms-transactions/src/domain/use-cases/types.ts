@@ -80,7 +80,9 @@ export type DepositOutput = HttpResult & {
   balance: number
 }
 
-export type UpdateBalanceInput = AccountDTO
+export type UpdateBalanceInput = {
+  accountId: string
+}
 
 export type UpdateBalanceOutput = Result & {
   balance: string
