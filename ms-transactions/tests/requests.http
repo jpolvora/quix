@@ -13,7 +13,7 @@ POST http://localhost:3002/deposit/111994c7-81e7-4614-ad1f-9bb927751e14 HTTP/1.1
 content-type: application/json
 
 {
-    "amount": "112"
+    "amount": "652.18"
 }
 
 

@@ -1,35 +1,33 @@
-import { createMQProducer } from '@/infra/createMQProducer'
 import { AccountDTO } from './AccountDTO'
 import { TransactionDTO } from './TransactionDTO'
 import { AccountEvents, TransactionEvents } from '@/domain/AccountEvents'
-
-const BalanceExchangeName = 'balance'
-const TransactionExchangeName = 'transactions'
-const ExchangeType = 'fanout'
+import { RabbitMQConnection, RabbitMQProducer } from '@/infra'
 
 export class TransactionPublisher {
-  async publishDeposit(dto: TransactionDTO) {
+  constructor(private readonly connection: RabbitMQConnection) {}
+
+  async publishDeposit(dto: TransactionDTO): Promise<boolean> {
     try {
       const msg = JSON.stringify(dto)
-      const producer = await createMQProducer(
-        TransactionEvents.TRANSACTION_DEPOSIT,
-        TransactionExchangeName,
-        ExchangeType,
-        true,
-      )
-      return producer(msg)
+      const producer = new RabbitMQProducer(TransactionEvents.TRANSACTION_DEPOSIT, this.connection)
+
+      return await producer.publishMessage(msg)
     } catch (error) {
       console.error(error)
     }
+
+    return false
   }
 
-  async publishBalanceUpdated(dto: AccountDTO) {
+  async publishBalanceUpdated(dto: AccountDTO): Promise<boolean> {
     try {
       const msg = JSON.stringify(dto)
-      const producer = await createMQProducer(AccountEvents.BALANCE_UPDATED, BalanceExchangeName, ExchangeType, true)
-      return producer(msg)
+      const producer = new RabbitMQProducer(AccountEvents.BALANCE_UPDATED, this.connection)
+      return await producer.publishMessage(msg)
     } catch (error) {
       console.error(error)
     }
+
+    return false
   }
 }

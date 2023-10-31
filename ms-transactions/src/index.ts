@@ -4,6 +4,7 @@ import { Command } from 'commander'
 import { startApp } from '@/shared/utils/app'
 import { setupApp } from '@/application/app'
 import { adaptConsumersToUseCases } from './application/consumer-adapter-usecase'
+import { rabbitMqConnection } from './application/container'
 
 async function start() {
   const options = new Command()
@@ -20,7 +21,7 @@ async function start() {
 
   const app = await setupApp()
 
-  await Promise.all([startApp(app, port), adaptConsumersToUseCases()])
+  await Promise.all([startApp(app, port), adaptConsumersToUseCases(rabbitMqConnection)])
 
   if (process.send) process.send('ready') //pm2
 

@@ -25,13 +25,18 @@ export class DbUpdateBalance implements IUpdateBalance {
       .map((x) => x.amount)
       .reduce((x, y) => Decimal.sum(x, y), new Decimal(0))
 
-    console.log('novo saldo: ', balance)
+    //console.log('novo saldo: ', balance)
     //atualizar saldo
     try {
       const updated = await this.accountsRepository.updateBalance(input.accountId, balance)
       //enviar notificacao de atualizar saldo
       this.publisher.publishBalanceUpdated(updated)
-    } catch (error) {}
+    } catch (error) {
+      return {
+        balance: '0.00',
+        success: false,
+      }
+    }
 
     return {
       balance: balance.toString(),

@@ -11,19 +11,31 @@ import { Request, Response } from 'express'
 import { IDeposit } from '@/domain/use-cases/IDeposit'
 import { DepositHandler } from './actions/DepositHandler'
 import { DbUpdateBalance } from '@/data/DbUpdateBalance'
+import { RabbitMQConnection } from '@/infra'
+import { IUpdateBalance } from '@/domain/use-cases'
 
 export type ServiceRegistration = {
   [key: string]: Function
 }
 
+export const rabbitMqConnection = new RabbitMQConnection(process.env.AMQP_URL, 60 * 1000)
+
 //USE CASES
 
 export function makeDepositUseCase(): IDeposit {
-  return new DbDeposit(new AccountsRepository(prisma), new TransactionRepository(prisma), new TransactionPublisher())
+  return new DbDeposit(
+    new AccountsRepository(prisma),
+    new TransactionRepository(prisma),
+    new TransactionPublisher(rabbitMqConnection),
+  )
 }
 
-export const makeUpdateBalanceUseCase = () =>
-  new DbUpdateBalance(new AccountsRepository(prisma), new TransactionRepository(prisma), new TransactionPublisher())
+export const makeUpdateBalanceUseCase = (): IUpdateBalance =>
+  new DbUpdateBalance(
+    new AccountsRepository(prisma),
+    new TransactionRepository(prisma),
+    new TransactionPublisher(rabbitMqConnection),
+  )
 
 // HANDLERS => HTTP
 
