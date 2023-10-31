@@ -1,7 +1,7 @@
 import { createMQProducer } from '@/infra/createMQProducer'
 import { AccountDTO } from './AccountDTO'
 import { TransactionDTO } from './TransactionDTO'
-import { AccountEvents } from '@/domain/AccountEvents'
+import { AccountEvents, TransactionEvents } from '@/domain/AccountEvents'
 
 const BalanceExchangeName = 'balance'
 const TransactionExchangeName = 'transactions'
@@ -12,7 +12,7 @@ export class TransactionPublisher {
     try {
       const msg = JSON.stringify(dto)
       const producer = await createMQProducer(
-        AccountEvents.TRANSACTION_DEPOSIT,
+        TransactionEvents.TRANSACTION_DEPOSIT,
         TransactionExchangeName,
         ExchangeType,
         true,

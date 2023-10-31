@@ -1,4 +1,4 @@
-import { AccountEvents } from '@/domain/AccountEvents'
+import { AccountEvents, TransactionEvents } from '@/domain/AccountEvents'
 import { createConsumer } from '@/infra/createConsumer'
 import { processAccountCreated, processDeposit } from './actions'
 import { AccountDTO } from '@/data/AccountDTO'
@@ -7,7 +7,7 @@ import { TransactionDTO } from '@/data/TransactionDTO'
 
 export async function adaptConsumersToUseCases(): Promise<void> {
   await Promise.all([
-    createConsumer(AccountEvents.TRANSACTION_DEPOSIT).then((fn) => fn(depositEventHandler)),
+    createConsumer(TransactionEvents.TRANSACTION_DEPOSIT).then((fn) => fn(depositEventHandler)),
     createConsumer(AccountEvents.ACCOUNT_CREATED).then((fn) => fn(accountCreatedEventHandler)),
   ])
 }
