@@ -15,6 +15,7 @@ export class RabbitMQConnection {
   async connect() {
     try {
       this.connection = await amqp.connect(this.connectionUrl)
+      this.connection.once('error', this.scheduleReconnect.bind(this))
       this.channel = await this.connection.createChannel()
       this.isConnected = true
       console.log('Connected to RabbitMQ')
