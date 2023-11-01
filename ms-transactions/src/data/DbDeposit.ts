@@ -1,14 +1,14 @@
 import { DbError } from '@/validation/errors/DbError'
-import { AccountsRepository, TransactionRepository } from '.'
 import { DepositInput, DepositOutput } from '@/domain/use-cases'
 import { TransactionPublisher } from './TransactionPublisher'
 import { IDeposit } from '@/domain/use-cases/IDeposit'
 import { EntityNotFoundError } from '@/validation/errors'
+import { IAccountRepository, ITransactionRepository } from '@/domain/repository'
 
 export class DbDeposit implements IDeposit {
   constructor(
-    private readonly accountsRepository: AccountsRepository,
-    private readonly transactionsRepository: TransactionRepository,
+    private readonly accountsRepository: IAccountRepository,
+    private readonly transactionsRepository: ITransactionRepository,
     private readonly publisher: TransactionPublisher,
   ) {}
 

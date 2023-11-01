@@ -1,14 +1,14 @@
 import 'dotenv/config'
 import './register'
 import 'reflect-metadata'
-import environment from './application/config/env'
+import { env } from './application/config/env'
 import { Command } from 'commander'
 import { RabbitMQApp, ExpressApp } from './application'
 
 async function start() {
   const options = new Command()
-    .option('-p, --port [VALUE]', 'http port', environment.PORT)
-    .option('-e, --env [VALUE]', 'environment', environment.NODE_ENV)
+    .option('-p, --port [VALUE]', 'http port', env.PORT)
+    .option('-e, --env [VALUE]', 'environment', env.NODE_ENV)
     .parse(process.argv)
     .opts()
 

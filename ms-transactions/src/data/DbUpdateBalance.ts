@@ -1,14 +1,13 @@
-import { AccountsRepository, TransactionRepository } from '.'
 import { TRANSACTION_TYPES, UpdateBalanceInput, UpdateBalanceOutput } from '@/domain/use-cases'
 import { TransactionPublisher } from './TransactionPublisher'
 import { IUpdateBalance } from '@/domain/use-cases/IUpdateBalance'
 import { Decimal } from '@prisma/client/runtime/library'
-import { AccountDTO } from './AccountDTO'
+import { IAccountRepository, ITransactionRepository } from '@/domain/repository'
 
 export class DbUpdateBalance implements IUpdateBalance {
   constructor(
-    private readonly accountsRepository: AccountsRepository,
-    private readonly transactionsRepository: TransactionRepository,
+    private readonly accountsRepository: IAccountRepository,
+    private readonly transactionsRepository: ITransactionRepository,
     private readonly publisher: TransactionPublisher,
   ) {}
 

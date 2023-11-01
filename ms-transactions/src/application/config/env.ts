@@ -1,10 +1,12 @@
 export type AppConfig = {
-  amqpUrl: string
+  AMQP_URL: string
   PORT: string
   NODE_ENV: string
+  DATABASE_URL: string
 }
-export default {
-  amqpUrl: process.env.AMQP_URL || '',
+export const env = {
+  AMQP_URL: process.env.AMQP_URL || '',
   NODE_ENV: process.env.NODE_ENV || 'development',
-  PORT: '3001',
+  PORT: process.env.PORT,
+  DATABASE_URL: process.env.DATABASE_URL,
 } as AppConfig

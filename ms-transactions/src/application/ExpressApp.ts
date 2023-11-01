@@ -1,14 +1,21 @@
-import express, { NextFunction, Request, Response, json } from 'express'
+import express, { Express, NextFunction, Request, Response, json } from 'express'
 import { ApiController } from './ApiController'
 import { DbError, EntityNotFoundError, ValidationError } from '@/validation/errors'
 import { IApplication } from '../shared/types/IApplication'
 import { startApp } from '@/shared/utils/app'
 
-export class ExpressApp implements IApplication {
-  constructor(readonly port: number) {}
+export class ExpressApp implements IApplication<Express> {
+  private app: Express | null = null
+
+  constructor(readonly port: number | string) {}
+
+  getApp(): Express {
+    if (this.app == null) this.app = express()
+    return this.app
+  }
 
   async start(): Promise<void> {
-    const app = express()
+    const app = this.getApp()
 
     //setup middlewares
 
@@ -69,6 +76,6 @@ export class ExpressApp implements IApplication {
       })
     })
 
-    await startApp(app, this.port)
+    await startApp(app, Number(this.port))
   }
 }

@@ -8,10 +8,10 @@ import { IUpdateBalance, IDeposit } from '@/domain/use-cases'
 import { AccountDTO } from '@/data/AccountDTO'
 import { AccountEvents, TransactionEvents } from '@/domain/AccountEvents'
 import { TransactionDTO } from '@/data/TransactionDTO'
-import env from './config/env'
+import { env } from './config/env'
 
-export const rabbitMqConnectionPublish = new RabbitMQConnection(env.amqpUrl)
-export const rabbitMqConnectionConsume = new RabbitMQConnection(env.amqpUrl)
+export const rabbitMqConnectionPublish = new RabbitMQConnection(env.AMQP_URL)
+export const rabbitMqConnectionConsume = new RabbitMQConnection(env.AMQP_URL)
 
 //USE CASES
 
