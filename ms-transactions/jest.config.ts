@@ -1,6 +1,6 @@
 import type { Config } from '@jest/types'
 
-process.env['DATABASE_URL'] = 'postgresql://postgres:pgsql@localhost:5432/quix-accounts?schema=public'
+//process.env['DATABASE_URL'] = 'postgresql://postgres:pgsql@localhost:5432/quix-transactions?schema=public'
 
 // Sync object
 const config: Config.InitialOptions = {

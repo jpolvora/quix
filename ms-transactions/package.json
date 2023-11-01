@@ -16,6 +16,7 @@
     "compose:up": "npm run build && docker compose up --build",
     "compose:down": "docker compose down -v",
     "test": "jest",
+    
     "gendocs": "typedoc --out docs src/index.ts",
     "servedocs": "pm2 serve ./docs 8088",
     "db:migrate": "npx prisma migrate dev"

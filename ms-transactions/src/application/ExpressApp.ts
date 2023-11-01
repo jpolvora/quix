@@ -5,16 +5,22 @@ import { IApplication } from '../shared/types/IApplication'
 import { startApp } from '@/shared/utils/app'
 
 export class ExpressApp implements IApplication<Express> {
-  private app: Express | null = null
+  private readonly app: Express
+  private started: boolean = false
+  private configured: boolean = false
 
-  constructor(readonly port: number | string) {}
+  constructor(readonly port: number | string) {
+    this.app = express()
+    this.configure()
+  }
 
   getApp(): Express {
-    if (this.app == null) this.app = express()
     return this.app
   }
 
-  async start(): Promise<void> {
+  async configure() {
+    if (this.configured) return
+
     const app = this.getApp()
 
     //setup middlewares
@@ -76,6 +82,13 @@ export class ExpressApp implements IApplication<Express> {
       })
     })
 
+    this.configured = true
+  }
+
+  async start(): Promise<void> {
+    if (this.started) return
+    const app = this.getApp()
     await startApp(app, Number(this.port))
+    this.started = true
   }
 }

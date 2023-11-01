@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { prisma } from '@/infra/prisma-client'
 import { poupancaEnabled, poupancaDisabled, correnteEnabled, correnteDisabled } from './data'
 import { agent as request } from 'supertest'
@@ -5,8 +6,9 @@ import { ExpressApp } from '@/application/ExpressApp'
 import { env } from '@/application/config/env'
 
 beforeAll(async () => {
-  await prisma.$connect()
+  console.log(env)
 
+  await prisma.$connect()
   await prisma.accounts.deleteMany()
   await prisma.transactions.deleteMany()
 
