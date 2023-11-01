@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import './register'
+import config from './application/config/env'
 import { Command } from 'commander'
 import { startApp } from '@/shared/utils/app'
 import { setupApp } from '@/application/app'

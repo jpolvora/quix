@@ -33,12 +33,12 @@ export default abstract class ActionHandler<
         //log
         this.handleError(output.statusCode, output.error, res, next)
       }
-    } catch (error) {
+    } catch (error: any) {
       this.handleError(500, error, res, next)
     }
   }
 
-  private handleError(statusCode: number, error: Error, res: Response, next: NextFunction) {
+  private handleError(statusCode: number, error: any, res: Response, next: NextFunction) {
     if (!error) return next(new Error('unknow error'))
 
     console.log(error)

@@ -19,7 +19,7 @@ export class RabbitMQConnection {
       this.channel = await this.connection.createChannel()
       this.isConnected = true
       console.log('Connected to RabbitMQ')
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Failed to connect to RabbitMQ: ${error.message}`)
       this.scheduleReconnect()
     }

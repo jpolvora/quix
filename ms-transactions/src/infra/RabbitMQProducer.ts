@@ -14,6 +14,8 @@ export class RabbitMQProducer {
   async publishMessage(message: string): Promise<boolean> {
     try {
       this.channel = await this.connection.getChannel()
+      if (!this.channel) throw new Error('Could not create channel')
+
       await this.channel.assertQueue(this.queueName)
       this.channel.sendToQueue(this.queueName, Buffer.from(message))
       console.log(`Message published to queue: ${this.queueName}`)

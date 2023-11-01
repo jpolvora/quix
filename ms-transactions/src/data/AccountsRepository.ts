@@ -45,7 +45,7 @@ export class AccountsRepository {
     })
   }
 
-  async updateBalance(accountId: string, balance: Decimal) {
+  async updateBalance(accountId: string, balance: Decimal): Promise<AccountDTO | null> {
     try {
       const result = await this.prisma.accounts.update({
         where: {
@@ -59,5 +59,6 @@ export class AccountsRepository {
     } catch (error) {
       console.log(error)
     }
+    return null
   }
 }

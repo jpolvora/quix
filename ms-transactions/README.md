@@ -23,6 +23,9 @@ Implementation of a 'Pix' bank & account services
 
 O projeto foi implementado utilizando arquitetura de microsserviços para demonstrar a utilização de comunicação entre API's, mensageria, bancos de dados, cache, API Gateway. Desta forma, nos aproximamos do mundo real.
 
+* Saga orquestrada
+* Saga coreografada (EVENT DRIVEN)
+
 O projeto é composto por:
 
     - Microserviço "Account": responsável pelo cadastro e manutenção de contas bancárias, disponibilizando também o saldo

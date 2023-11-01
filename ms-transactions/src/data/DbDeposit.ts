@@ -37,12 +37,12 @@ export class DbDeposit implements IDeposit {
         balance: 0,
         ...data,
       }
-    } catch (error) {
+    } catch (error: unknown) {
       return {
         balance: 0,
         statusCode: 500,
         success: false,
-        error: new DbError(error),
+        error: new DbError(error!.toString()),
       }
     }
   }

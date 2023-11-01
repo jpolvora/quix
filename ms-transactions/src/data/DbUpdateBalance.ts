@@ -3,6 +3,7 @@ import { TRANSACTION_TYPES, UpdateBalanceInput, UpdateBalanceOutput } from '@/do
 import { TransactionPublisher } from './TransactionPublisher'
 import { IUpdateBalance } from '@/domain/use-cases/IUpdateBalance'
 import { Decimal } from '@prisma/client/runtime/library'
+import { AccountDTO } from './AccountDTO'
 
 export class DbUpdateBalance implements IUpdateBalance {
   constructor(
@@ -29,8 +30,10 @@ export class DbUpdateBalance implements IUpdateBalance {
     //atualizar saldo
     try {
       const updated = await this.accountsRepository.updateBalance(input.accountId, balance)
-      //enviar notificacao de atualizar saldo
-      this.publisher.publishBalanceUpdated(updated)
+      if (updated) {
+        //enviar notificacao de atualizar saldo
+        this.publisher.publishBalanceUpdated(updated)
+      }
     } catch (error) {
       return {
         balance: '0.00',

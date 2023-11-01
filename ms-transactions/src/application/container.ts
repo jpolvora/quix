@@ -5,13 +5,14 @@ import { IDeposit } from '@/domain/use-cases/IDeposit'
 import { DepositHandler } from './actions/DepositHandler'
 import { DbUpdateBalance } from '@/data/DbUpdateBalance'
 import { RabbitMQConnection, RabbitMQConsumer } from '@/infra'
-import { IUpdateBalance, TRANSACTION_TYPES } from '@/domain/use-cases'
+import { IUpdateBalance } from '@/domain/use-cases'
 import { AccountDTO } from '@/data/AccountDTO'
 import { AccountEvents, TransactionEvents } from '@/domain/AccountEvents'
 import { TransactionDTO } from '@/data/TransactionDTO'
+import env from './config/env'
 
-export const rabbitMqConnectionPublish = new RabbitMQConnection(process.env.AMQP_URL)
-export const rabbitMqConnectionConsume = new RabbitMQConnection(process.env.AMQP_URL)
+export const rabbitMqConnectionPublish = new RabbitMQConnection(env.amqpUrl)
+export const rabbitMqConnectionConsume = new RabbitMQConnection(env.amqpUrl)
 
 //USE CASES
 
