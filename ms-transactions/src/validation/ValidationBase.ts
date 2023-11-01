@@ -3,6 +3,12 @@ import { ValidationResult } from './ValidationResult'
 import { ValidationError, MissingParamError } from './errors'
 
 export abstract class ValidationBase<T> implements IValidation<T> {
+  validate(input: T): ValidationResult {
+    return {
+      isValid: false,
+      error: new ValidationError('not implemented'),
+    }
+  }
   static CreateMissingParameterError(parameterName: string): ValidationResult {
     return {
       error: new MissingParamError(parameterName),
@@ -22,6 +28,4 @@ export abstract class ValidationBase<T> implements IValidation<T> {
       isValid: true,
     }
   }
-
-  validate: (input: T) => ValidationResult
 }

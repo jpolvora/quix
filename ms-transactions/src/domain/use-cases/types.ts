@@ -16,7 +16,7 @@ export type HttpResult = Result & {
   statusCode: number
 }
 
-export type PagedResult = HttpResult &
+export type PagedResult = Result &
   Paging & {
     total: number
   }

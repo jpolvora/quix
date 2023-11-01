@@ -1,16 +1,14 @@
 import 'dotenv/config'
 import './register'
-import config from './application/config/env'
+import 'reflect-metadata'
+import environment from './application/config/env'
 import { Command } from 'commander'
-import { startApp } from '@/shared/utils/app'
-import { setupApp } from '@/application/app'
-import { adaptConsumersToUseCases } from './application/consumer-adapter-usecase'
-import { rabbitMqConnectionConsume } from './application/container'
+import { RabbitMQApp, ExpressApp } from './application'
 
 async function start() {
   const options = new Command()
-    .option('-p, --port [VALUE]', 'http port', process.env.PORT || '3001')
-    .option('-e, --env [VALUE]', 'environment', process.env.NODE_ENV || 'develop')
+    .option('-p, --port [VALUE]', 'http port', environment.PORT)
+    .option('-e, --env [VALUE]', 'environment', environment.NODE_ENV)
     .parse(process.argv)
     .opts()
 
@@ -20,9 +18,10 @@ async function start() {
 
   if (options.env) process.env.NODE_ENV = options.env
 
-  const app = await setupApp()
+  const expressApp = new ExpressApp(port)
+  const rabbitMqApp = new RabbitMQApp()
 
-  await Promise.all([startApp(app, port), adaptConsumersToUseCases()])
+  await Promise.all([expressApp.start(), rabbitMqApp.start()])
 
   if (process.send) process.send('ready') //pm2
 

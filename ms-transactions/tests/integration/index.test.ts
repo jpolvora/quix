@@ -1,7 +1,7 @@
 import { prisma } from '@/infra/prisma-client'
 import { poupancaEnabled, poupancaDisabled, correnteEnabled, correnteDisabled } from './data'
 import { agent as request } from 'supertest'
-import { setupApp } from '@/application/app'
+import { setupApp } from '@/application/ExpressApp'
 
 beforeAll(async () => {
   await prisma.$connect()
