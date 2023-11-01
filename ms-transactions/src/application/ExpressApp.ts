@@ -3,15 +3,26 @@ import { ApiController } from './ApiController'
 import { DbError, EntityNotFoundError, ValidationError } from '@/validation/errors'
 import { IApplication } from '../shared/types/IApplication'
 import { startApp } from '@/shared/utils/app'
+import { Server } from 'http'
 
 export class ExpressApp implements IApplication<Express> {
   private readonly app: Express
   private started: boolean = false
   private configured: boolean = false
+  private server: Server | null = null
 
   constructor(readonly port: number | string) {
     this.app = express()
     this.configure()
+  }
+
+  stop(): Promise<void> {
+    return new Promise((resolve) => {
+      if (!this.started) return resolve()
+      if (this.started) {
+        return this.server?.close(() => resolve())
+      }
+    })
   }
 
   getApp(): Express {
@@ -88,7 +99,7 @@ export class ExpressApp implements IApplication<Express> {
   async start(): Promise<void> {
     if (this.started) return
     const app = this.getApp()
-    await startApp(app, Number(this.port))
+    this.server = await startApp(app, Number(this.port))
     this.started = true
   }
 }

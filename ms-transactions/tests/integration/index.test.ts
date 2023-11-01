@@ -4,6 +4,16 @@ import { poupancaEnabled, poupancaDisabled, correnteEnabled, correnteDisabled } 
 import { agent as request } from 'supertest'
 import { ExpressApp } from '@/application/ExpressApp'
 import { env } from '@/application/config/env'
+import { RabbitMQApp } from '@/application'
+import { AccountsRepository } from '@/data'
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    return setTimeout(() => {
+      return resolve()
+    }, ms)
+  })
+}
 
 beforeAll(async () => {
   console.log(env)
@@ -33,7 +43,12 @@ describe('Default Handler', () => {
 describe('SAGA Tests Handler', () => {
   it('should make deposit when POST /deposit', async () => {
     //arrange
-    const sut = new ExpressApp(env.PORT).getApp()
+    const queue = new RabbitMQApp()
+    await queue.start()
+
+    const expressApp = new ExpressApp(env.PORT)
+    const sut = expressApp.getApp()
+
     const payload = {
       amount: '123.45',
     }
@@ -49,14 +64,25 @@ describe('SAGA Tests Handler', () => {
     expect(response.statusCode).toBe(201)
     expect(response.body).toMatchObject({
       success: true,
-      balance: 0,
       type: 'CASH_DEPOSIT',
       source: '00000000-0000-0000-0000-000000000000',
-      target: '910481f2-66cc-4bed-a366-cd21f69bd61b',
-      amount: '123.45',
+      target: correnteEnabled.id,
+      amount: payload.amount,
     })
 
+    await sleep(3000) //wait msg processed
     //efetuar um depósito
     //gravar evento na tabela de eventos
+    const accountsRepository = new AccountsRepository(prisma)
+    const account = await accountsRepository.getAccount(correnteEnabled.id)
+    console.log(account)
+    const balance = account?.balance?.toString()
+
+    expect(balance).toBe(payload.amount)
+
+    await expressApp.stop()
+    await queue.stop()
+
+    await sleep(3000) //wait msg processed
   })
 })

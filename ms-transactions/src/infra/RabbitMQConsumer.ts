@@ -1,7 +1,7 @@
 import amqp from 'amqplib'
 import { RabbitMQConnection } from './RabbitMQConnection'
 
-export class RabbitMQConsumer<TMessage> {
+export class RabbitMQConsumer<TMessage = any> {
   private channel: amqp.Channel | null = null
 
   constructor(
