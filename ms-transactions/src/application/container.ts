@@ -8,6 +8,7 @@ import { IUpdateBalance, IDeposit, Result } from '@/domain/use-cases'
 import { env } from './config/env'
 import { UpdateBalanceAdapter } from './adapters'
 import { TransactionEvents } from '@/domain/AccountEvents'
+import { AccountDTO } from '@/data/dto/AccountDTO'
 
 export const rabbitMqConnectionPublish = new RabbitMQConnection(env.AMQP_URL)
 export const rabbitMqConnectionConsume = new RabbitMQConnection(env.AMQP_URL)
@@ -38,7 +39,7 @@ export const makeDepositHandler = () => new DepositAdapter(makeDepositUseCase).g
 // HANDLERS => Consumers
 
 export const makeUpdateBalanceAdapter = () =>
-  new RabbitMQConsumer(
+  new RabbitMQConsumer<AccountDTO>(
     rabbitMqConnectionConsume,
     TransactionEvents.TRANSACTION_DEPOSIT,
     new UpdateBalanceAdapter(
