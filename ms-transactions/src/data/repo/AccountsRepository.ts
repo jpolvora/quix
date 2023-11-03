@@ -1,5 +1,5 @@
 import { Decimal } from '@prisma/client/runtime/library'
-import { AccountDTO } from './AccountDTO'
+import { AccountDTO } from '../dto/AccountDTO'
 import { PrismaClient } from '@prisma/client'
 import { IAccountRepository } from '@/domain/repository'
 

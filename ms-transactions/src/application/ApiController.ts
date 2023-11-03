@@ -21,6 +21,7 @@ export class ApiController {
     this.app.get('/pix/:sourceAccount/:targetPix', makeDummyHandler())
     //payment
     this.app.get('/payment/:sourceAccount/:doc', makeDummyHandler())
+
     return Promise.resolve()
   }
 }

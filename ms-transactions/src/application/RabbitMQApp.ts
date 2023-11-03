@@ -1,6 +1,4 @@
 import { IApplication } from '@/shared/types/IApplication'
-import { processAccountCreated, processDeposit } from './actions'
-import { makeConsumeAccountCreatedEvent, makeConsumeDepositMadeEvent } from './container'
 import { RabbitMQConsumer } from '@/infra'
 
 export class RabbitMQApp implements IApplication {
@@ -16,8 +14,8 @@ export class RabbitMQApp implements IApplication {
   }
 
   async start(): Promise<void> {
-    this.queuesConsuming.push(makeConsumeAccountCreatedEvent(processAccountCreated))
-    this.queuesConsuming.push(makeConsumeDepositMadeEvent(processDeposit))
+    //this.queuesConsuming.push(makeConsumeAccountCreatedEvent())
+    //this.queuesConsuming.push(makeConsumeDepositMadeEvent())
 
     await Promise.all(this.queuesConsuming.map((q) => q.startConsuming()))
   }

@@ -3,7 +3,7 @@ import { HttpResult, IUseCase, Result } from '@/domain/use-cases'
 import { DbError, EntityNotFoundError, MissingParamError, ValidationError } from '@/validation/errors'
 import { NextFunction, Request, Response } from 'express'
 
-export default abstract class ActionHandler<
+export default abstract class ExpressAdapter<
   TInput,
   TOutput extends HttpResult,
   UseCase extends IUseCase<TInput, TOutput>,
@@ -16,10 +16,10 @@ export default abstract class ActionHandler<
   }
 
   public getHandler() {
-    return this.handle.bind(this)
+    return this.adapt.bind(this)
   }
 
-  public async handle(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async adapt(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const useCase = this.useCaseFactory()
       const input = this.getInput(req)

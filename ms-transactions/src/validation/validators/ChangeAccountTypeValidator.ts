@@ -1,5 +1,5 @@
 import { AccountTypes, ChangeAccountTypeInput } from '@/domain/use-cases'
-import { AccountDTO } from '@/data/AccountDTO'
+import { AccountDTO } from '@/data/dto/AccountDTO'
 import { ValidationBase, ValidationResult } from '../'
 
 export class ChangeAccountTypeValidator implements ValidationBase<ChangeAccountTypeInput> {

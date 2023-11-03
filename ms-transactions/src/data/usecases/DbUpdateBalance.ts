@@ -1,8 +1,10 @@
-import { TRANSACTION_TYPES, UpdateBalanceInput, UpdateBalanceOutput } from '@/domain/use-cases'
-import { TransactionPublisher } from './TransactionPublisher'
+import { Result, TRANSACTION_TYPES } from '@/domain/use-cases'
+import { TransactionPublisher } from '../TransactionPublisher'
 import { IUpdateBalance } from '@/domain/use-cases/IUpdateBalance'
 import { Decimal } from '@prisma/client/runtime/library'
 import { IAccountRepository, ITransactionRepository } from '@/domain/repository'
+import { AccountDTO } from '../dto/AccountDTO'
+import { DbError, MissingParamError } from '@/validation/errors'
 
 export class DbUpdateBalance implements IUpdateBalance {
   constructor(
@@ -11,14 +13,17 @@ export class DbUpdateBalance implements IUpdateBalance {
     private readonly publisher: TransactionPublisher,
   ) {}
 
-  async execute(input: UpdateBalanceInput): Promise<UpdateBalanceOutput> {
-    if (!input.accountId)
+  async execute(input: AccountDTO): Promise<Result> {
+    const { id: accountId } = input
+
+    if (!accountId)
       return {
         success: false,
-        balance: '0',
+        error: new MissingParamError('input.id'),
       }
+
     //recuperar todas as transactions do jovem
-    const transactions = await this.transactionsRepository.getAllTransactionsByAccount(input.accountId)
+    const transactions = await this.transactionsRepository.getAllTransactionsByAccount(accountId)
     //calcular saldo
     const balance = transactions
       .filter((x) => x.type === TRANSACTION_TYPES.CASH_DEPOSIT)
@@ -28,20 +33,19 @@ export class DbUpdateBalance implements IUpdateBalance {
     //console.log('novo saldo: ', balance)
     //atualizar saldo
     try {
-      const updated = await this.accountsRepository.updateBalance(input.accountId, balance)
+      const updated = await this.accountsRepository.updateBalance(accountId, balance)
       if (updated) {
         //enviar notificacao de atualizar saldo
         this.publisher.publishBalanceUpdated(updated)
       }
-    } catch (error) {
+    } catch (error: any) {
       return {
-        balance: '0.00',
         success: false,
+        error: new DbError(error.toString()),
       }
     }
 
     return {
-      balance: balance.toString(),
       success: true,
     }
   }

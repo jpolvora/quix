@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { randomUUID } from 'crypto'
-import { TransactionDTO } from './TransactionDTO'
+import { TransactionDTO } from '../dto/TransactionDTO'
 import { TRANSACTION_TYPES } from '@/domain/use-cases'
 import { ITransactionRepository } from '@/domain/repository'
 

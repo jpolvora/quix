@@ -1,12 +1,12 @@
-import { AccountDTO } from './AccountDTO'
-import { TransactionDTO } from './TransactionDTO'
+import { AccountDTO } from './dto/AccountDTO'
+import { TransactionDTO } from './dto/TransactionDTO'
 import { AccountEvents, TransactionEvents } from '@/domain/AccountEvents'
 import { RabbitMQConnection, RabbitMQProducer } from '@/infra'
 
 export class TransactionPublisher {
   constructor(private readonly connection: RabbitMQConnection) {}
 
-  async publishDeposit(dto: TransactionDTO): Promise<boolean> {
+  async publishDeposit(dto: AccountDTO): Promise<boolean> {
     try {
       const msg = JSON.stringify(dto)
       const producer = new RabbitMQProducer(TransactionEvents.TRANSACTION_DEPOSIT, this.connection)

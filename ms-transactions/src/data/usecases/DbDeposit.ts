@@ -1,6 +1,6 @@
 import { DbError } from '@/validation/errors/DbError'
 import { DepositInput, DepositOutput } from '@/domain/use-cases'
-import { TransactionPublisher } from './TransactionPublisher'
+import { TransactionPublisher } from '../TransactionPublisher'
 import { IDeposit } from '@/domain/use-cases/IDeposit'
 import { EntityNotFoundError } from '@/validation/errors'
 import { IAccountRepository, ITransactionRepository } from '@/domain/repository'
@@ -29,7 +29,7 @@ export class DbDeposit implements IDeposit {
 
       const data = await this.transactionsRepository.deposit(account.id, amount)
 
-      await this.publisher.publishDeposit(data)
+      await this.publisher.publishDeposit(account)
 
       return {
         statusCode: 201,

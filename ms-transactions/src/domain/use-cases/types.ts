@@ -1,4 +1,4 @@
-import { AccountDTO } from '@/data/AccountDTO'
+import { AccountDTO } from '@/data/dto/AccountDTO'
 import { DbError, EntityNotFoundError } from '@/validation/errors'
 import { MissingParamError } from '@/validation/errors/MissingParamError'
 import { ValidationError } from '@/validation/errors/ValidationError'
@@ -78,12 +78,4 @@ export type DepositInput = {
 
 export type DepositOutput = HttpResult & {
   balance: number
-}
-
-export type UpdateBalanceInput = {
-  accountId: string
-}
-
-export type UpdateBalanceOutput = Result & {
-  balance: string
 }

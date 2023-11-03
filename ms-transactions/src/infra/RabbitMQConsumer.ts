@@ -1,13 +1,13 @@
 import amqp from 'amqplib'
 import { RabbitMQConnection } from './RabbitMQConnection'
 
-export class RabbitMQConsumer<TMessage = any> {
+export class RabbitMQConsumer<TMessage = any, TResult = boolean> {
   private channel: amqp.Channel | null = null
 
   constructor(
     private readonly connection: RabbitMQConnection,
     private readonly queueName: string,
-    private readonly eventHandler: (msg: TMessage) => Promise<boolean>,
+    private readonly eventHandler: (msg: TMessage) => Promise<TResult>,
   ) {}
 
   async stopConsuming() {

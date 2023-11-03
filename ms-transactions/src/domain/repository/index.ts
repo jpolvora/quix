@@ -1,5 +1,5 @@
-import { AccountDTO } from '@/data/AccountDTO'
-import { TransactionDTO } from '@/data/TransactionDTO'
+import { AccountDTO } from '@/data/dto/AccountDTO'
+import { TransactionDTO } from '@/data/dto/TransactionDTO'
 import { Decimal } from '@prisma/client/runtime/library'
 
 export interface IRespository {}
