@@ -6,6 +6,8 @@ import { DbUpdateBalance } from '@/data/usecases/DbUpdateBalance'
 import { RabbitMQConnection, RabbitMQConsumer } from '@/infra'
 import { IUpdateBalance, IDeposit, Result } from '@/domain/use-cases'
 import { env } from './config/env'
+import { UpdateBalanceAdapter } from './adapters'
+import { TransactionEvents } from '@/domain/AccountEvents'
 
 export const rabbitMqConnectionPublish = new RabbitMQConnection(env.AMQP_URL)
 export const rabbitMqConnectionConsume = new RabbitMQConnection(env.AMQP_URL)
@@ -35,18 +37,16 @@ export const makeDepositHandler = () => new DepositAdapter(makeDepositUseCase).g
 
 // HANDLERS => Consumers
 
-// export const makeConsumeAccountCreatedEvent = (callback: (dto: AccountDTO) => Promise<boolean>) =>
-//   new RabbitMQConsumer<AccountDTO>(rabbitMqConnectionConsume, AccountEvents.ACCOUNT_CREATED, callback)
-
-// export const makeConsumeAccountCreatedEvent = (callback: (dto: AccountDTO) => Promise<boolean>) =>
-//   new AccountCreatedAdapter(new Account )
-
-// export const makeConsumeDepositMadeEvent = (callback: (dto: TransactionDTO) => Promise<boolean>) =>
-//   new RabbitMQConsumer<TransactionDTO>(rabbitMqConnectionConsume, TransactionEvents.TRANSACTION_DEPOSIT, callback)
-
-// export const makeConsumeDepositMadeEvent = () =>
-//   new RabbitMQConsumer<AccountDTO, Result>(
-//     rabbitMqConnectionConsume,
-//     TransactionEvents.TRANSACTION_DEPOSIT,
-//     new UpdateBalanceAdapter(makeUpdateBalanceUseCase).adapt,
-//   )
+export const makeUpdateBalanceAdapter = () =>
+  new RabbitMQConsumer(
+    rabbitMqConnectionConsume,
+    TransactionEvents.TRANSACTION_DEPOSIT,
+    new UpdateBalanceAdapter(
+      () =>
+        new DbUpdateBalance(
+          new AccountsRepository(prisma),
+          new TransactionRepository(prisma),
+          new TransactionPublisher(rabbitMqConnectionConsume),
+        ),
+    ).getHandler(),
+  )

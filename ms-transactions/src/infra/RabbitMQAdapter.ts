@@ -19,9 +19,9 @@ export abstract class RabbitMQAdapter<TInput, TOutput extends Result, UseCase ex
 
   async adapt(msg: amqp.ConsumeMessage): Promise<boolean> {
     try {
-      const useCase = this.useCaseFactory()
       const input: TInput = this.getInput(msg) as TInput
       if (!input) return false
+      const useCase = this.useCaseFactory()
 
       const output: TOutput = await useCase.execute(input)
 

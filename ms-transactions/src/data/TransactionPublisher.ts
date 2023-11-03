@@ -1,5 +1,4 @@
 import { AccountDTO } from './dto/AccountDTO'
-import { TransactionDTO } from './dto/TransactionDTO'
 import { AccountEvents, TransactionEvents } from '@/domain/AccountEvents'
 import { RabbitMQConnection, RabbitMQProducer } from '@/infra'
 
