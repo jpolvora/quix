@@ -4,11 +4,12 @@ import { Request, Response } from 'express'
 import { DepositAdapter } from './adapters/http/DepositAdapter'
 import { DbUpdateBalance } from '@/data/usecases/DbUpdateBalance'
 import { RabbitMQConnection, RabbitMQConsumer } from '@/infra'
-import { IUpdateBalance, IDeposit, Result } from '@/domain/use-cases'
+import { IUpdateBalance, IDeposit, Result, IAccountCreated } from '@/domain/use-cases'
 import { env } from './config/env'
-import { UpdateBalanceAdapter } from './adapters'
-import { TransactionEvents } from '@/domain/AccountEvents'
+import { AccountCreatedAdapter, UpdateBalanceAdapter } from './adapters'
+import { AccountEvents, TransactionEvents } from '@/domain/AccountEvents'
 import { AccountDTO } from '@/data/dto/AccountDTO'
+import { DbAccountCreated } from '@/data/usecases/DbAccountCreated'
 
 export const rabbitMqConnectionPublish = new RabbitMQConnection(env.AMQP_URL)
 export const rabbitMqConnectionConsume = new RabbitMQConnection(env.AMQP_URL)
@@ -30,11 +31,13 @@ export const makeUpdateBalanceUseCase = (): IUpdateBalance =>
     new TransactionPublisher(rabbitMqConnectionPublish),
   )
 
+export const makeAccounCreatedUseCase = (): IAccountCreated => new DbAccountCreated(new AccountsRepository(prisma))
+
 // HANDLERS => HTTP
 
-export const makeDummyHandler = () => (req: Request, res: Response) => res.send(req.originalUrl)
-
 export const makeDepositHandler = () => new DepositAdapter(makeDepositUseCase).getHandler()
+
+export const makeDummyHandler = () => (req: Request, res: Response) => res.send(req.originalUrl)
 
 // HANDLERS => Consumers
 
@@ -42,12 +45,12 @@ export const makeUpdateBalanceAdapter = () =>
   new RabbitMQConsumer<AccountDTO>(
     rabbitMqConnectionConsume,
     TransactionEvents.TRANSACTION_DEPOSIT,
-    new UpdateBalanceAdapter(
-      () =>
-        new DbUpdateBalance(
-          new AccountsRepository(prisma),
-          new TransactionRepository(prisma),
-          new TransactionPublisher(rabbitMqConnectionConsume),
-        ),
-    ).getHandler(),
+    new UpdateBalanceAdapter(makeUpdateBalanceUseCase).getHandler(),
+  )
+
+export const makeAccountCreatedAdapter = () =>
+  new RabbitMQConsumer<AccountDTO>(
+    rabbitMqConnectionConsume,
+    AccountEvents.ACCOUNT_CREATED,
+    new AccountCreatedAdapter(makeAccounCreatedUseCase).getHandler(),
   )
