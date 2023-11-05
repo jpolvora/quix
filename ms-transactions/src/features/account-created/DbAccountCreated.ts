@@ -1,13 +1,11 @@
-import { IAccountCreated } from '@/domain/use-cases/IAccountCreated'
-import { AccountDTO } from '../dto/AccountDTO'
-import { IAccountRepository } from '@/domain/repository'
-import { Result } from '@/domain/use-cases'
+import { AccountCreated, IAccountCreated } from '@/features/account-created'
+import { IAccountRepository } from '@/domain/repository/IAccountRepository'
 import { DbError } from '@/validation/errors'
 
 export class DbAccountCreated implements IAccountCreated {
   constructor(private readonly accountsRepository: IAccountRepository) {}
 
-  async execute(input: AccountDTO): Promise<Result> {
+  async execute(input: AccountCreated.Input): Promise<AccountCreated.Output> {
     await this.accountsRepository.createAccount(input)
 
     return {

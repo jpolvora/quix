@@ -22,18 +22,24 @@ export class RabbitMQConsumer<TMessage = any, TResult = boolean> {
       this.channel = await this.connection.getChannel()
       if (!this.channel) throw new Error('Channel not created')
 
+      await this.channel.assertQueue(this.queueName, {
+        durable: true,
+      })
+
       await this.channel.prefetch(1)
-      await this.channel.assertQueue(this.queueName)
+
       console.log(`Started consuming from queue: ${this.queueName}`)
 
       this.channel.consume(this.queueName, async (message) => {
         if (message) {
-          console.log('Received message')
-          const dto = JSON.parse(message.content.toString()) as TMessage
+          console.log('Received message', this.queueName)
+          const json = message.content.toString()
+          const dto = JSON.parse(json) as TMessage
           if (dto) {
             const ack = await this.eventHandler(dto)
-            return ack ? this.channel!.ack(message) : this.channel!.nack(message)
+            return ack ? this.channel?.ack(message) : this.channel?.nack(message)
           }
+          this.channel?.nack(message)
         }
       })
     } catch (errorConnect) {

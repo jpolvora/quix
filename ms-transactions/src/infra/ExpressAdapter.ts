@@ -1,5 +1,5 @@
 import { createInputFromRequest } from '@/shared/utils/app'
-import { HttpResult, IUseCase, Result } from '@/domain/use-cases'
+import { HttpResult, IUseCase } from '@/domain/use-cases'
 import { DbError, EntityNotFoundError, MissingParamError, ValidationError } from '@/validation/errors'
 import { NextFunction, Request, Response } from 'express'
 

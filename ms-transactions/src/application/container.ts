@@ -1,15 +1,13 @@
-import { AccountsRepository, DbDeposit, TransactionPublisher, TransactionRepository } from '@/data'
+import { AccountsRepository, TransactionPublisher, TransactionRepository } from '@/data'
+import { AccountEvents, TransactionEvents } from '@/domain/AccountEvents'
+import { AccountCreated, AccountCreatedAdapter, DbAccountCreated, IAccountCreated } from '@/features/account-created'
+import { IUpdateBalance, UpdateBalance, UpdateBalanceAdapter } from '@/features/update-balance'
+import { DbUpdateBalance } from '@/features/update-balance/DbUpdateBalance'
+import { RabbitMQConnection, RabbitMQConsumer } from '@/infra'
 import { prisma } from '@/infra/prisma-client'
 import { Request, Response } from 'express'
-import { DepositAdapter } from './adapters/http/DepositAdapter'
-import { DbUpdateBalance } from '@/data/usecases/DbUpdateBalance'
-import { RabbitMQConnection, RabbitMQConsumer } from '@/infra'
-import { IUpdateBalance, IDeposit, Result, IAccountCreated } from '@/domain/use-cases'
+import { DbDeposit, DepositAdapter, IDeposit } from '../features/make-deposit'
 import { env } from './config/env'
-import { AccountCreatedAdapter, UpdateBalanceAdapter } from './adapters'
-import { AccountEvents, TransactionEvents } from '@/domain/AccountEvents'
-import { AccountDTO } from '@/data/dto/AccountDTO'
-import { DbAccountCreated } from '@/data/usecases/DbAccountCreated'
 
 export const rabbitMqConnectionPublish = new RabbitMQConnection(env.AMQP_URL)
 export const rabbitMqConnectionConsume = new RabbitMQConnection(env.AMQP_URL)
@@ -42,14 +40,14 @@ export const makeDummyHandler = () => (req: Request, res: Response) => res.send(
 // HANDLERS => Consumers
 
 export const makeUpdateBalanceAdapter = () =>
-  new RabbitMQConsumer<AccountDTO>(
+  new RabbitMQConsumer<UpdateBalance.Input>(
     rabbitMqConnectionConsume,
     TransactionEvents.TRANSACTION_DEPOSIT,
     new UpdateBalanceAdapter(makeUpdateBalanceUseCase).getHandler(),
   )
 
 export const makeAccountCreatedAdapter = () =>
-  new RabbitMQConsumer<AccountDTO>(
+  new RabbitMQConsumer<AccountCreated.Input>(
     rabbitMqConnectionConsume,
     AccountEvents.ACCOUNT_CREATED,
     new AccountCreatedAdapter(makeAccounCreatedUseCase).getHandler(),

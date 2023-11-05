@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\application",
+    "\\src\\application\\adapters",
+    "\\src\\application\\adapters\\queue",
+    "\\src\\features",
+    "\\src\\features\\account-created",
+    "\\src\\features\\make-deposit"
+  ],
+  "SelectedNode": "\\src\\features\\make-deposit\\index.ts",
+  "PreviewInSolutionExplorer": false
+}

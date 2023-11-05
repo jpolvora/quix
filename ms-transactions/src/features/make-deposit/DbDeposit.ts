@@ -1,9 +1,9 @@
-import { DbError } from '@/validation/errors/DbError'
-import { DepositInput, DepositOutput } from '@/domain/use-cases'
-import { TransactionPublisher } from '../TransactionPublisher'
-import { IDeposit } from '@/domain/use-cases/IDeposit'
+import { TransactionPublisher } from '@/data'
+import { IAccountRepository } from '@/domain/repository/IAccountRepository'
+import { ITransactionRepository } from '@/domain/repository/ITransactionRepository'
 import { EntityNotFoundError } from '@/validation/errors'
-import { IAccountRepository, ITransactionRepository } from '@/domain/repository'
+import { DbError } from '@/validation/errors/DbError'
+import { Deposit, IDeposit } from '.'
 
 export class DbDeposit implements IDeposit {
   constructor(
@@ -12,7 +12,7 @@ export class DbDeposit implements IDeposit {
     private readonly publisher: TransactionPublisher,
   ) {}
 
-  async execute(input: DepositInput): Promise<DepositOutput> {
+  async execute(input: Deposit.Input): Promise<Deposit.Output> {
     const { accountId, amount } = input
 
     try {

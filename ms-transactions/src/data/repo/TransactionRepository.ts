@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { randomUUID } from 'crypto'
 import { TransactionDTO } from '../dto/TransactionDTO'
 import { TRANSACTION_TYPES } from '@/domain/use-cases'
-import { ITransactionRepository } from '@/domain/repository'
+import { ITransactionRepository } from '@/domain/repository/ITransactionRepository'
 
 export class TransactionRepository implements ITransactionRepository {
   constructor(private readonly prisma: PrismaClient) {}

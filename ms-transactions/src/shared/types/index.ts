@@ -1,1 +1,1 @@
-export * from './MicroServiceEntryPoint'
+export * from './IApplication'

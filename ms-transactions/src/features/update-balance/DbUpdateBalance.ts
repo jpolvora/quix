@@ -1,9 +1,10 @@
 import { Result, TRANSACTION_TYPES } from '@/domain/use-cases'
-import { TransactionPublisher } from '../TransactionPublisher'
-import { IUpdateBalance } from '@/domain/use-cases/IUpdateBalance'
+import { TransactionPublisher } from '../../data/TransactionPublisher'
+import { IUpdateBalance } from '@/features/update-balance/IUpdateBalance'
 import { Decimal } from '@prisma/client/runtime/library'
-import { IAccountRepository, ITransactionRepository } from '@/domain/repository'
-import { AccountDTO } from '../dto/AccountDTO'
+import { ITransactionRepository } from '@/domain/repository/ITransactionRepository'
+import { IAccountRepository } from '@/domain/repository/IAccountRepository'
+import { AccountDTO } from '../../data/dto/AccountDTO'
 import { DbError, MissingParamError } from '@/validation/errors'
 
 export class DbUpdateBalance implements IUpdateBalance {

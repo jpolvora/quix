@@ -1,8 +1,7 @@
-import amqp from 'amqplib'
 import { Result, IUseCase } from '@/domain/use-cases'
 
-export abstract class RabbitMQAdapter<TInput, TOutput extends Result, UseCase extends IUseCase<TInput, TOutput>> {
-  constructor(private readonly useCaseFactory: () => UseCase) {}
+export abstract class RabbitMQAdapter<TInput, TOutput extends Result, TUseCase extends IUseCase<TInput, TOutput>> {
+  constructor(private readonly useCaseFactory: () => TUseCase) {}
 
   public getHandler() {
     return this.adapt.bind(this)
