@@ -15,7 +15,10 @@ function sleep(ms: number): Promise<void> {
   })
 }
 
-beforeAll(async () => {
+let rabbitApp: RabbitMQApp
+let expressApp: ExpressApp
+
+beforeEach(async () => {
   console.log(env)
 
   await prisma.$connect()
@@ -25,12 +28,21 @@ beforeAll(async () => {
   await prisma.accounts.createMany({
     data: [poupancaEnabled, poupancaDisabled, correnteEnabled, correnteDisabled],
   })
+
+  expressApp = new ExpressApp(env.PORT)
+  rabbitApp = new RabbitMQApp()
+})
+
+afterEach(async () => {
+  await prisma.$disconnect()
+  await expressApp.stop()
+  await rabbitApp.stop()
 })
 
 describe('Default Handler', () => {
   it('should respond with status 200 when GET /', async () => {
     //arrange
-    const sut = new ExpressApp(env.PORT).getApp()
+    const sut = expressApp.getApp()
 
     //act
     const response = await request(sut).get('/')
@@ -41,48 +53,44 @@ describe('Default Handler', () => {
 })
 
 describe('SAGA Tests Handler', () => {
-  it('should make deposit when POST /deposit', async () => {
-    //arrange
-    const queue = new RabbitMQApp()
-    await queue.start()
+  it(
+    'should make deposit when POST /deposit',
+    async () => {
+      //arrange
+      await rabbitApp.start()
+      const sut = expressApp.getApp()
 
-    const expressApp = new ExpressApp(env.PORT)
-    const sut = expressApp.getApp()
+      const payload = {
+        amount: '123.45',
+      }
 
-    const payload = {
-      amount: '123.45',
-    }
+      //act
+      const response = await request(sut)
+        .post(`/deposit/${correnteEnabled.id}`)
+        .send({
+          ...payload,
+        })
 
-    //act
-    const response = await request(sut)
-      .post(`/deposit/${correnteEnabled.id}`)
-      .send({
-        ...payload,
+      //assert
+      expect(response.statusCode).toBe(201)
+      expect(response.body).toMatchObject({
+        success: true,
+        type: 'CASH_DEPOSIT',
+        source: '00000000-0000-0000-0000-000000000000',
+        target: correnteEnabled.id,
+        amount: payload.amount,
       })
 
-    //assert
-    expect(response.statusCode).toBe(201)
-    expect(response.body).toMatchObject({
-      success: true,
-      type: 'CASH_DEPOSIT',
-      source: '00000000-0000-0000-0000-000000000000',
-      target: correnteEnabled.id,
-      amount: payload.amount,
-    })
+      await sleep(3000) //wait msg processed
+      //efetuar um depósito
+      //gravar evento na tabela de eventos
+      const accountsRepository = new AccountsRepository(prisma)
+      const account = await accountsRepository.getAccount(correnteEnabled.id)
+      //console.log(account)
+      const balance = account?.balance?.toString()
 
-    await sleep(3000) //wait msg processed
-    //efetuar um depósito
-    //gravar evento na tabela de eventos
-    const accountsRepository = new AccountsRepository(prisma)
-    const account = await accountsRepository.getAccount(correnteEnabled.id)
-    console.log(account)
-    const balance = account?.balance?.toString()
-
-    expect(balance).toBe(payload.amount)
-
-    await expressApp.stop()
-    await queue.stop()
-
-    await sleep(3000) //wait msg processed
-  })
+      expect(balance).toBe(payload.amount)
+    },
+    12 * 1000,
+  )
 })

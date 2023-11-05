@@ -1,8 +1,8 @@
-console.log('Before Start')
+//console.log('Before Start')
 beforeAll(() => {
-  console.log('beforeAll')
+  //  console.log('beforeAll')
 })
 
 beforeEach(() => {
-  console.log('beforeEach')
+  //console.log('beforeEach')
 })

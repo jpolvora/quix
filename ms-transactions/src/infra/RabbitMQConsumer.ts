@@ -12,9 +12,14 @@ export class RabbitMQConsumer<TMessage = any, TResult = boolean> {
 
   async stopConsuming() {
     if (this.channel) {
-      this.channel.close()
+      await this.channel.close()
       console.log(`Stopped consuming from queue: ${this.queueName}`)
     }
+  }
+
+  async stop() {
+    await this.stopConsuming()
+    await this.connection.close()
   }
 
   async startConsuming() {

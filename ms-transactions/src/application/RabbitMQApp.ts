@@ -10,6 +10,11 @@ export class RabbitMQApp implements IApplication {
     this.queuesConsuming = []
   }
 
+  async disconnect() {
+    await Promise.all(this.queuesConsuming.map((q) => q.stop()))
+    this.queuesConsuming = []
+  }
+
   getApp() {
     return this
   }
