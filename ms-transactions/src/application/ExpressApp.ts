@@ -29,6 +29,10 @@ export class ExpressApp implements IApplication<Express> {
     return this.app
   }
 
+  getServer() {
+    return this.server
+  }
+
   async configure() {
     if (this.configured) return
 

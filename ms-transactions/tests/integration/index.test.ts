@@ -37,6 +37,11 @@ afterEach(async () => {
   await prisma.$disconnect()
   await expressApp.stop()
   await rabbitApp.stop()
+  await sleep(1000)
+})
+
+afterAll(async () => {
+  await sleep(1000)
 })
 
 describe('Default Handler', () => {
@@ -81,7 +86,7 @@ describe('SAGA Tests Handler', () => {
         amount: payload.amount,
       })
 
-      await sleep(3000) //wait msg processed
+      await sleep(1000) //wait msg processed
       //efetuar um depósito
       //gravar evento na tabela de eventos
       const accountsRepository = new AccountsRepository(prisma)

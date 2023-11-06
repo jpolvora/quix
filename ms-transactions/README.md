@@ -23,8 +23,19 @@ Implementation of a 'Pix' bank & account services
 
 O projeto foi implementado utilizando arquitetura de microsserviços para demonstrar a utilização de comunicação entre API's, mensageria, bancos de dados, cache, API Gateway. Desta forma, nos aproximamos do mundo real.
 
-* Saga orquestrada
-* Saga coreografada (EVENT DRIVEN)
+
+    - Architectural Overview
+  
+        * Saga orquestrada (Sinchronous Requests/Responses)
+        * Saga coreografada (EVENT DRIVEN)
+        * Listen To Yourself Pattern
+        * Outbox Pattern
+  
+    - Patterns Overview
+  
+        * Observer Pattern
+        * 
+
 
 O projeto é composto por:
 

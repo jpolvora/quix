@@ -2,7 +2,6 @@ import * as amqp from 'amqplib'
 
 export class RabbitMQConnection {
   private connection: amqp.Connection | null = null
-  private channel: amqp.Channel | null = null
   private isConnected: boolean = false
   private connectionUrl: string
   private reconnectInterval: number
@@ -15,16 +14,22 @@ export class RabbitMQConnection {
 
   async connect() {
     try {
+      this.isConnected = false
+      this.connection = null
       this.isEnabled = true
       this.connection = await amqp.connect(this.connectionUrl)
-      this.connection.once('error', this.scheduleReconnect.bind(this))
-      this.channel = await this.connection.createChannel()
+      this.connection.on('error', this.scheduleReconnect)
       this.isConnected = true
-      console.log('Connected to RabbitMQ')
     } catch (error: any) {
       console.error(`Failed to connect to RabbitMQ: ${error.message}`)
       this.scheduleReconnect()
     }
+  }
+
+  async createChannel(): Promise<amqp.Channel | null> {
+    if (this.connection) return await this.connection.createChannel()
+    await this.connect()
+    return this.createChannel()
   }
 
   private scheduleReconnect() {
@@ -41,20 +46,11 @@ export class RabbitMQConnection {
       }, this.reconnectInterval)
   }
 
-  async getChannel(): Promise<amqp.Channel | null> {
-    if (!this.isConnected) {
-      //console.warn('Channel is not available. Trying to reconnect...')
-      await this.connect()
-    }
-    return this.channel
-  }
-
   async close() {
     this.isEnabled = false
     if (this.connection) {
       await this.connection.close()
       this.isConnected = false
-      console.log('Connection to RabbitMQ closed')
     }
   }
 }

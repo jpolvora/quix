@@ -11,9 +11,18 @@ export class RabbitMQProducer {
     this.connection = connection
   }
 
+  async getChannel(): Promise<amqp.Channel | null> {
+    if (!this.channel) {
+      try {
+        this.channel = await this.connection.createChannel()
+      } catch (error) {}
+    }
+    return this.channel
+  }
+
   async publishMessage(message: string): Promise<boolean> {
     try {
-      this.channel = await this.connection.getChannel()
+      this.channel = await this.getChannel()
       if (!this.channel) throw new Error('Could not create channel')
 
       await this.channel.assertQueue(this.queueName)

@@ -17,6 +17,15 @@ export class RabbitMQConsumer<TMessage = any, TResult = boolean> {
     }
   }
 
+  async getChannel(): Promise<amqp.Channel | null> {
+    if (!this.channel) {
+      try {
+        this.channel = await this.connection.createChannel()
+      } catch (error) {}
+    }
+    return this.channel
+  }
+
   async stop() {
     await this.stopConsuming()
     await this.connection.close()
@@ -24,7 +33,7 @@ export class RabbitMQConsumer<TMessage = any, TResult = boolean> {
 
   async startConsuming() {
     try {
-      this.channel = await this.connection.getChannel()
+      this.channel = await this.getChannel()
       if (!this.channel) throw new Error('Channel not created')
 
       await this.channel.assertQueue(this.queueName, {
