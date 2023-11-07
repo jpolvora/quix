@@ -3,9 +3,10 @@ import { RabbitMQConnection } from './RabbitMQConnection'
 
 export class RabbitMQConsumer<TMessage = any, TResult = boolean> {
   private channel: amqp.Channel | null = null
+  private connection: RabbitMQConnection | null = null
 
   constructor(
-    private readonly connection: RabbitMQConnection,
+    private readonly connectionFactory: () => Promise<RabbitMQConnection>,
     private readonly queueName: string,
     private readonly eventHandler: (msg: TMessage) => Promise<TResult>,
   ) {}
@@ -17,10 +18,17 @@ export class RabbitMQConsumer<TMessage = any, TResult = boolean> {
     }
   }
 
+  async getConnection() {
+    if (!this.connection) this.connection = await this.connectionFactory()
+
+    return this.connection
+  }
+
   async getChannel(): Promise<amqp.Channel | null> {
     if (!this.channel) {
       try {
-        this.channel = await this.connection.createChannel()
+        const conn = await this.getConnection()
+        this.channel = await conn?.createChannel()
       } catch (error) {}
     }
     return this.channel
@@ -28,7 +36,8 @@ export class RabbitMQConsumer<TMessage = any, TResult = boolean> {
 
   async stop() {
     await this.stopConsuming()
-    await this.connection.close()
+    if (this.connection) await this.connection.close()
+    this.connection = null
   }
 
   async startConsuming() {

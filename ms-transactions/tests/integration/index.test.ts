@@ -47,7 +47,7 @@ afterAll(async () => {
 describe('Default Handler', () => {
   it('should respond with status 200 when GET /', async () => {
     //arrange
-    const sut = expressApp.getApp()
+    const sut = expressApp.getServer()
 
     //act
     const response = await request(sut).get('/')
@@ -63,7 +63,7 @@ describe('SAGA Tests Handler', () => {
     async () => {
       //arrange
       await rabbitApp.start()
-      const sut = expressApp.getApp()
+      const sut = expressApp.getServer()
 
       const payload = {
         amount: '123.45',

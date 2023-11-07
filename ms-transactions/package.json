@@ -15,7 +15,7 @@
     "clean": "rimraf dist",
     "compose:up": "npm run build && docker compose up --build",
     "compose:down": "docker compose down -v",
-    "test": "jest --no-cache --passWithNoTests --runInBand --detectOpenHandles --forceExit",    
+    "test": "jest --no-cache --passWithNoTests --runInBand --detectOpenHandles --verbose --coverage --forceExit",    
     "gendocs": "typedoc --out docs src/index.ts",
     "servedocs": "pm2 serve ./docs 8088",
     "db:migrate": "npx prisma migrate dev"

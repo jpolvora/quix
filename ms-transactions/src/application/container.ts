@@ -41,14 +41,14 @@ export const makeDummyHandler = () => (req: Request, res: Response) => res.send(
 
 export const makeUpdateBalanceAdapter = () =>
   new RabbitMQConsumer<UpdateBalance.Input>(
-    rabbitMqConnectionConsume,
+    () => Promise.resolve(rabbitMqConnectionConsume),
     TransactionEvents.TRANSACTION_DEPOSIT,
     new UpdateBalanceAdapter(makeUpdateBalanceUseCase).getHandler(),
   )
 
 export const makeAccountCreatedAdapter = () =>
   new RabbitMQConsumer<AccountCreated.Input>(
-    rabbitMqConnectionConsume,
+    () => Promise.resolve(rabbitMqConnectionConsume),
     AccountEvents.ACCOUNT_CREATED,
     new AccountCreatedAdapter(makeAccounCreatedUseCase).getHandler(),
   )

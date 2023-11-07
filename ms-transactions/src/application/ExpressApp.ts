@@ -1,9 +1,9 @@
 import express, { Express, NextFunction, Request, Response, json } from 'express'
-import { ApiController } from './ApiController'
 import { DbError, EntityNotFoundError, ValidationError } from '@/validation/errors'
 import { IApplication } from '../shared/types/IApplication'
 import { startApp } from '@/shared/utils/app'
 import { Server } from 'http'
+import { makeDepositHandler, makeDummyHandler } from './container'
 
 export class ExpressApp implements IApplication<Express> {
   private readonly app: Express
@@ -68,7 +68,23 @@ export class ExpressApp implements IApplication<Express> {
       throw error
     })
 
-    await new ApiController(app).configureRoutes()
+    //############# APP CUSTOM ROUTES
+
+    app.get('/list', makeDummyHandler())
+    //listar todas as transacoes de uma determinada conta
+    app.get('/list/:id', makeDummyHandler())
+    //saque em dinheiro
+    app.get('/withdawal/:account', makeDummyHandler())
+    //deposito em dinheiro
+    app.post('/deposit/:accountId', makeDepositHandler())
+    //transferencia para outra conta
+    app.get('/transfer/:sourceAccount/:targetAccount', makeDummyHandler())
+    //receive pix
+    app.get('/pix/:targetPix', makeDummyHandler())
+    //send pix
+    app.get('/pix/:sourceAccount/:targetPix', makeDummyHandler())
+    //payment
+    app.get('/payment/:sourceAccount/:doc', makeDummyHandler())
 
     //global 404 error handler
     app.use((_req: Request, _res: Response, next: NextFunction) => {
